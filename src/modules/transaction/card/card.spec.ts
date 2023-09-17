@@ -6,7 +6,7 @@ describe('Card entity', (): void => {
 			(): Card =>
 				new Card({
 					CVV: '123456',
-					number: '4444 5555 6666 7777',
+					number: '1243',
 					ownerName: 'John Doe',
 					expirationDate: new Date(),
 				}),
@@ -23,5 +23,17 @@ describe('Card entity', (): void => {
 					expirationDate: new Date(),
 				}),
 		).toThrowError('Card number must have 16 digits.');
+	});
+
+	it('should create a Card', (): void => {
+		const card = new Card({
+			CVV: '123',
+			number: '4444 5555 6666 7777',
+			ownerName: 'John Doe',
+			expirationDate: new Date(),
+		});
+
+		expect(card.CVV).toBe('123');
+		expect(card.number).toBe('7777');
 	});
 });
