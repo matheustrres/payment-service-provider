@@ -1,0 +1,69 @@
+{
+  "parser": "@typescript-eslint/parser",
+  "parserOptions": {
+    "project": "tsconfig.json",
+    "sourceType": "module"
+  },
+  "plugins": [
+    "@typescript-eslint/eslint-plugin",
+    "eslint-plugin-import-helpers"
+  ],
+  "extends": [
+    "plugin:@typescript-eslint/recommended"
+  ],
+  "root": true,
+  "env": {
+    "node": true,
+    "jest": true
+  },
+  "ignorePatterns": [
+    ".eslintrc.js"
+  ],
+  "rules": {
+    "no-dupe-class-members": "error",
+    "no-duplicate-imports": "warn",
+    "no-extra-semi": "warn",
+    "no-mixed-spaces-and-tabs": "off",
+    "no-tabs": "off",
+    "space-before-function-paren": [
+      "warn",
+      {
+        "anonymous": "never",
+        "named": "never",
+        "asyncArrow": "always"
+      }
+    ],
+    "import-helpers/order-imports": [
+      "warn",
+      {
+        "newlinesBetween": "always",
+        "groups": [
+          "/^node/",
+          "module",
+          "/^(.|..)\//",
+          "/^@config/",
+          "/^@core/",
+          "/^@infra/",
+          "/^@ioC/",
+          "/^@modules/",
+          [
+            "sibling"
+          ]
+        ],
+        "alphabetize": {
+          "order": "asc",
+          "ignoreCase": false
+        }
+      }
+    ],
+    "@typescript-eslint/no-explicit-any": "off",
+    "@typescript-eslint/consistent-type-imports": [
+      "warn",
+      {
+        "disallowTypeAnnotations": true,
+        "fixStyle": "inline-type-imports",
+        "prefer": "type-imports"
+      }
+    ]
+  }
+}
