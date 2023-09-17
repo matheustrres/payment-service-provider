@@ -1,6 +1,6 @@
 import { Card } from './card';
 
-describe('Card entity', (): void => {
+describe('Card', (): void => {
 	it('should throw when creating a Card with invalid CVV length', (): void => {
 		expect(
 			(): Card =>
