@@ -13,6 +13,14 @@
     "esModuleInterop": true,
     "experimentalDecorators": true,
     "emitDecoratorMetadata": true,
+    "paths": {
+      "@core/*": [
+        "./core/*"
+      ],
+      "@modules/*": [
+        "./modules/*"
+      ],
+    },
     "rootDirs": [
       "./",
       "../tests"

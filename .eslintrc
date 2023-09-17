@@ -41,11 +41,9 @@
           "/^node/",
           "module",
           "/^(.|..)\//",
-          "/^@config/",
           "/^@core/",
-          "/^@infra/",
-          "/^@ioC/",
           "/^@modules/",
+          "/^@tests/",
           [
             "sibling"
           ]
