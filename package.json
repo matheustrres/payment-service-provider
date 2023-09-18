@@ -19,7 +19,11 @@
     "prepare": "husky install",
     "test": "jest --runInBand",
     "test:cov": "npm test -- --coverage",
-    "test:staged": "npm test -- --findRelatedTests"
+    "test:staged": "npm test -- --findRelatedTests",
+    "start": "dotenv -e .env -- nest start",
+    "start:dev": "npm start -- --watch",
+    "start:debug": "npm start -- --debug --watch",
+    "start:prod": "node dist/main"
   },
   "dependencies": {
     "@nestjs/common": "^10.2.5",
