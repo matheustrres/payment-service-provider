@@ -3,6 +3,8 @@ import { type MockProxy, mock } from 'jest-mock-extended';
 import { type ListUserTransactionsRepository } from '@modules/transaction/data/repositories/list-user-transactions-repository';
 import { type FindUserByIdRepository } from '@modules/user/data/repositories/find-by-id-repository';
 
+import { makeUser } from '@tests/factories/user';
+
 import { ListUserTransactionsService } from '.';
 
 describe('ListUserTransactions service', (): void => {
@@ -14,7 +16,9 @@ describe('ListUserTransactions service', (): void => {
 		transactionRepository = mock();
 		userRepository = mock();
 
-		userRepository.findUserById.mockResolvedValueOnce(null);
+		userRepository.findUserById
+			.mockResolvedValueOnce(null)
+			.mockResolvedValueOnce(makeUser({}, 'random_user_id'));
 	});
 
 	beforeEach((): void => {
@@ -25,10 +29,28 @@ describe('ListUserTransactions service', (): void => {
 	});
 
 	it('should throw if an invalid user tries to list transactions', async (): Promise<void> => {
-		await expect(
-			sut.exec({
-				userId: 'fake_user_id',
-			}),
-		).rejects.toThrowError('No user found with ID "fake_user_id".');
+		const promise = sut.exec({
+			userId: 'fake_user_id',
+		});
+
+		expect(userRepository.findUserById).toHaveBeenNthCalledWith(
+			1,
+			'fake_user_id',
+		);
+
+		await expect(promise).rejects.toThrowError(
+			'No user found with ID "fake_user_id".',
+		);
+	});
+
+	it('should return an empty array of user transactions', async (): Promise<void> => {
+		const { transactions } = await sut.exec({ userId: 'random_user_id' });
+
+		expect(userRepository.findUserById).toHaveBeenNthCalledWith(
+			2,
+			'random_user_id',
+		);
+
+		expect(transactions.length).toBe(0);
 	});
 });
