@@ -18,6 +18,9 @@
     "test:staged": "npm test -- --findRelatedTests",
     "prepare": "husky install"
   },
+  "dependencies": {
+    "dotenv-cli": "^7.3.0"
+  },
   "devDependencies": {
     "@swc/core": "^1.3.83",
     "@swc/jest": "^0.2.29",
