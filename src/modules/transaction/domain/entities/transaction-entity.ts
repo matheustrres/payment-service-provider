@@ -37,6 +37,10 @@ export class Transaction extends BaseEntity<TransactionProps> {
 		return this.props.value;
 	}
 
+	public get paymentMethod(): string {
+		return this.props.paymentMethod;
+	}
+
 	public get description(): string | undefined {
 		return this.props.description;
 	}

@@ -31,4 +31,21 @@ describe('CreateTransaction service', (): void => {
 			'Invalid payment method provided! Acceptable methods: credit_card, debit_card.',
 		);
 	});
+
+	it('should create a new transaction', async (): Promise<void> => {
+		const { transaction } = await sut.exec({
+			userId: 'random_user_id',
+			cardCVV: '812',
+			cardExpirationDate: new Date(2027, 7),
+			cardNumber: '5122669098750023',
+			cardOwnerName: 'David Ortiz',
+			paymentMethod: 'credit_card',
+			value: '285.99',
+		});
+
+		expect(transaction.id).toBeDefined();
+		expect(transaction.card).toBeDefined();
+		expect(transaction.card.number).toBe('0023');
+		expect(transaction.paymentMethod).toBe('credit_card');
+	});
 });
