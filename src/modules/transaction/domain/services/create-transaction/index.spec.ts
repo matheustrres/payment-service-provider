@@ -44,8 +44,8 @@ describe('CreateTransaction service', (): void => {
 		});
 
 		expect(transaction.id).toBeDefined();
-		expect(transaction.card).toBeDefined();
-		expect(transaction.card.number).toBe('0023');
+		expect(transaction.cardCVV).toBeDefined();
+		expect(transaction.cardNumber).toBe('0023');
 		expect(transaction.paymentMethod).toBe('credit_card');
 	});
 });

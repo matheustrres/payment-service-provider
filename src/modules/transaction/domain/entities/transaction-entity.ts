@@ -45,7 +45,23 @@ export class Transaction extends BaseEntity<TransactionProps> {
 		return this.props.description;
 	}
 
-	public get card(): Card {
+	private get card(): Card {
 		return this.props.card;
+	}
+
+	public get cardCVV(): string {
+		return this.card.CVV;
+	}
+
+	public get cardOwnerName(): string {
+		return this.card.ownerName;
+	}
+
+	public get cardExpirationDate(): Date {
+		return this.card.expirationDate;
+	}
+
+	public get cardNumber(): string {
+		return this.card.number;
 	}
 }
