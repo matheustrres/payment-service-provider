@@ -13,10 +13,10 @@
     "build": "tsc --build ./tsconfig.build.json",
     "format": "prettier --write \"src/**/*.ts\" \"tests/**/*.ts\"",
     "lint": "eslint \"{src,apps,libs,tests}/**/*.ts\" --fix",
+    "prepare": "husky install",
     "test": "jest --runInBand",
     "test:cov": "npm test -- --coverage",
-    "test:staged": "npm test -- --findRelatedTests",
-    "prepare": "husky install"
+    "test:staged": "npm test -- --findRelatedTests"
   },
   "dependencies": {
     "@nestjs/common": "^10.2.5",
@@ -48,6 +48,7 @@
     "lint-staged": "^14.0.1",
     "prettier": "^3.0.3",
     "ts-node": "^10.9.1",
+    "tsx": "^3.12.10",
     "typescript": "^5.2.2"
   }
 }
