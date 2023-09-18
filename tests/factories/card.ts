@@ -1,4 +1,7 @@
-import { Card, type CardProps } from '@modules/transaction/card/card';
+import {
+	Card,
+	type CardProps,
+} from '@modules/transaction/domain/entities/card/card';
 
 export const makeCard = (override: Partial<CardProps> = {}) =>
 	new Card({
