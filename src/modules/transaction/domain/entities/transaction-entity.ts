@@ -6,7 +6,7 @@ import { type Optional } from '@core/helpers/optional';
 export type TransactionProps = BaseProps & {
 	userId: string;
 	payableId?: string;
-	value: number;
+	value: string;
 	paymentMethod: string;
 	description?: string;
 	card: Card;
@@ -33,7 +33,7 @@ export class Transaction extends BaseEntity<TransactionProps> {
 		return this.props.payableId;
 	}
 
-	public get value(): number {
+	public get value(): string {
 		return this.props.value;
 	}
 
