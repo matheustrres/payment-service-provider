@@ -17,9 +17,11 @@ describe('ListUserTransactions service', (): void => {
 		transactionRepository = mock();
 		userRepository = mock();
 
-		userRepository.findUserById
-			.mockResolvedValueOnce(null)
-			.mockResolvedValue(makeUser({}, 'random_user_id'));
+		userRepository.findUserById.mockResolvedValueOnce(null).mockResolvedValue(
+			makeUser({
+				id: 'random_user_id',
+			}),
+		);
 
 		transactionRepository.listUserTransactions
 			.mockResolvedValueOnce([])
