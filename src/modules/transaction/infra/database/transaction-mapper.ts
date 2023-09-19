@@ -18,13 +18,17 @@ export class TransactionMapper {
 	): Transaction {
 		const { user, ...moreRest } = rest;
 
+		const card = new Card({
+			CVV: cardCVV,
+			expirationDate: cardExpirationDate,
+			number: cardNumber,
+			ownerName: cardOwnerName,
+		});
+
+		card.validateCardNumberLength(cardNumber.length);
+
 		const transaction = new Transaction({
-			card: new Card({
-				CVV: cardCVV,
-				expirationDate: cardExpirationDate,
-				number: cardNumber,
-				ownerName: cardOwnerName,
-			}),
+			card,
 			...moreRest,
 		});
 
@@ -36,12 +40,12 @@ export class TransactionMapper {
 	}
 
 	public static toPersistence(
-		domainTransactions: Transaction,
+		domainTransaction: Transaction,
 		relations?: {
 			user?: boolean;
 		},
 	) {
-		const { user: domainUser, ...rest } = domainTransactions;
+		const { user: domainUser, ...rest } = domainTransaction;
 
 		const pgTransaction = rest as PgTransaction;
 

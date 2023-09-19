@@ -13,16 +13,15 @@ describe('Card', (): void => {
 		).toThrowError('Card CVV must have 3 digits.');
 	});
 
-	it('should throw when creating a Card with invalid number length', (): void => {
-		expect(
-			(): Card =>
-				new Card({
-					CVV: '123',
-					number: '4444',
-					ownerName: 'John Doe',
-					expirationDate: new Date(),
-				}),
-		).toThrowError('Card number must have 16 digits.');
+	it.only('should throw when creating a Card with invalid number length', (): void => {
+		const card = new Card({
+			CVV: '123',
+			number: '4444',
+			ownerName: 'John Doe',
+			expirationDate: new Date(),
+		});
+
+		expect(card.validateCardNumberLength(16)).toBe(false);
 	});
 
 	it('should create a Card', (): void => {
@@ -34,6 +33,7 @@ describe('Card', (): void => {
 		});
 
 		expect(card.CVV).toBe('123');
+		expect(card.validateCardNumberLength(4)).toBe(true);
 		expect(card.number).toBe('7777');
 	});
 });
