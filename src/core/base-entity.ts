@@ -1,32 +1,20 @@
 import crypto from 'node:crypto';
 
-export type BaseProps = {
-	createdAt: Date | string;
-	updatedAt?: Date | string;
-};
+import { type GetBaseProps } from './helpers/get-base-props';
 
-export class BaseEntity<Props extends BaseProps> {
-	private readonly _id: string;
-	protected props: Props;
+export class BaseEntity {
+	public readonly id: string;
+	public readonly createdAt: Date | string;
+	public updatedAt?: Date | string;
 
-	protected constructor(props: Props, id?: string) {
-		this._id = id || crypto.randomUUID();
-		this.props = props;
-	}
+	protected constructor(props: GetBaseProps<BaseEntity>) {
+		this.id = props.id || crypto.randomUUID();
 
-	public get id(): string {
-		return this._id;
-	}
-
-	public get createdAt(): Date | string {
-		return this.props.createdAt;
-	}
-
-	public get updatedAt(): Date | string | undefined {
-		return this.props.updatedAt;
+		this.createdAt = props.createdAt || new Date();
+		this.updatedAt = props.updatedAt;
 	}
 
 	protected touch(): void {
-		this.props.updatedAt = new Date();
+		this.updatedAt = new Date();
 	}
 }

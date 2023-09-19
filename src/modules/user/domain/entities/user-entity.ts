@@ -1,45 +1,27 @@
-import { BaseEntity, type BaseProps } from '@core/base-entity';
-import { type Optional } from '@core/helpers/optional';
+import { BaseEntity } from '@core/base-entity';
+import { type GetBaseProps } from '@core/helpers/get-base-props';
 
 import { type Transaction } from '@modules/transaction/domain/entities/transaction-entity';
 
-export type UserProps = BaseProps & {
+export type UserProps = {
 	name: string;
 	email: string;
 	password: string;
 	transactions: Transaction[] | null;
 };
 
-export type OptionalUserProps = Optional<
-	UserProps,
-	'createdAt' | 'transactions'
->;
+export class User extends BaseEntity {
+	public name: string;
+	public email: string;
+	public password: string;
+	public transactions: Transaction[] | null;
 
-export class User extends BaseEntity<UserProps> {
-	public constructor(props: OptionalUserProps, id?: string) {
-		super(
-			{
-				...props,
-				transactions: props.transactions ?? [],
-				createdAt: props.createdAt ?? new Date(),
-			},
-			id,
-		);
-	}
+	public constructor(props: GetBaseProps<UserProps>) {
+		super(props);
 
-	public get name(): string {
-		return this.props.name;
-	}
-
-	public get email(): string {
-		return this.props.email;
-	}
-
-	public get password(): string {
-		return this.props.password;
-	}
-
-	public get transactions(): Transaction[] | null {
-		return this.props.transactions;
+		this.name = props.name;
+		this.email = props.email;
+		this.password = props.password;
+		this.transactions = props.transactions ?? [];
 	}
 }

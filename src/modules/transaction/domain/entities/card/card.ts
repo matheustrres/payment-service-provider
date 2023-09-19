@@ -6,7 +6,10 @@ export type CardProps = {
 };
 
 export class Card {
-	private props: CardProps;
+	public readonly CVV: string;
+	public readonly expirationDate: Date;
+	public readonly ownerName: string;
+	public readonly number: string;
 
 	public constructor(props: CardProps) {
 		if (props.CVV.length > 3) {
@@ -19,26 +22,10 @@ export class Card {
 			throw new Error(`Card number must have 16 digits.`);
 		}
 
-		this.props = {
-			...props,
-			number: this.getLastCardNumberDigits(cardNumber),
-		};
-	}
-
-	public get CVV(): string {
-		return this.props.CVV;
-	}
-
-	public get expirationDate(): Date {
-		return this.props.expirationDate;
-	}
-
-	public get number(): string {
-		return this.props.number;
-	}
-
-	public get ownerName(): string {
-		return this.props.ownerName;
+		this.CVV = props.CVV;
+		this.expirationDate = props.expirationDate;
+		this.ownerName = props.ownerName;
+		this.number = this.getLastCardNumberDigits(cardNumber);
 	}
 
 	private formatCardNumber(cardNumber: string): string {

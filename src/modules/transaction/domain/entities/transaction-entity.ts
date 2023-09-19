@@ -1,9 +1,9 @@
 import { type Card } from './card/card';
 
-import { BaseEntity, type BaseProps } from '@core/base-entity';
-import { type Optional } from '@core/helpers/optional';
+import { BaseEntity } from '@core/base-entity';
+import { type GetBaseProps } from '@core/helpers/get-base-props';
 
-export type TransactionProps = BaseProps & {
+export type TransactionProps = {
 	userId: string;
 	payableId?: string;
 	value: string;
@@ -12,56 +12,28 @@ export type TransactionProps = BaseProps & {
 	card: Card;
 };
 
-export type OptionalTransactionProps = Optional<TransactionProps, 'createdAt'>;
+export class Transaction extends BaseEntity {
+	public readonly userId: string;
+	public readonly payableId?: string;
+	public readonly value: string;
+	public readonly paymentMethod: string;
+	public description?: string;
+	public readonly cardCVV: string;
+	public readonly cardExpirationDate: Date;
+	public readonly cardNumber: string;
+	public readonly cardOwnerName: string;
 
-export class Transaction extends BaseEntity<TransactionProps> {
-	public constructor(props: OptionalTransactionProps, id?: string) {
-		super(
-			{
-				...props,
-				createdAt: props.createdAt ?? new Date(),
-			},
-			id,
-		);
-	}
+	public constructor(props: GetBaseProps<TransactionProps>) {
+		super(props);
 
-	public get userId(): string {
-		return this.props.userId;
-	}
-
-	public get payableId(): string | undefined {
-		return this.props.payableId;
-	}
-
-	public get value(): string {
-		return this.props.value;
-	}
-
-	public get paymentMethod(): string {
-		return this.props.paymentMethod;
-	}
-
-	public get description(): string | undefined {
-		return this.props.description;
-	}
-
-	private get card(): Card {
-		return this.props.card;
-	}
-
-	public get cardCVV(): string {
-		return this.card.CVV;
-	}
-
-	public get cardOwnerName(): string {
-		return this.card.ownerName;
-	}
-
-	public get cardExpirationDate(): Date {
-		return this.card.expirationDate;
-	}
-
-	public get cardNumber(): string {
-		return this.card.number;
+		this.userId = props.userId;
+		this.payableId = props.payableId;
+		this.value = props.value;
+		this.paymentMethod = props.paymentMethod;
+		this.description = props.description;
+		this.cardCVV = props.card.CVV;
+		this.cardExpirationDate = props.card.expirationDate;
+		this.cardNumber = props.card.number;
+		this.cardOwnerName = props.card.ownerName;
 	}
 }
