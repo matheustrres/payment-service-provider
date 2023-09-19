@@ -14,7 +14,7 @@ export class Card {
 	private _number: string;
 
 	public constructor(props: CardProps) {
-		if (props.CVV.length > 3)
+		if (props.CVV.length !== 3)
 			throw new InvalidCardError('Card CVV must have 3 digits.');
 
 		this.CVV = props.CVV;
