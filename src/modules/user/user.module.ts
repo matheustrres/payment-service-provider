@@ -7,6 +7,7 @@ import {
 } from './data/repositories';
 import { CreateUserService } from './domain/services/create-user';
 import { PgUserRepository } from './infra/database/user-repository';
+import { UserController } from './infra/http/user.controller';
 
 type CreateUserServiceRepository = CreateUserRepository &
 	FindUserByEmailRepository;
@@ -32,6 +33,7 @@ type CreateUserServiceRepository = CreateUserRepository &
 			inject: [CreateUserRepository, FindUserByEmailRepository],
 		},
 	],
+	controllers: [UserController],
 	exports: [
 		CreateUserRepository,
 		FindUserByEmailRepository,
