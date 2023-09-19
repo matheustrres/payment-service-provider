@@ -3,8 +3,11 @@ import { type Card } from './card/card';
 import { BaseEntity } from '@core/base-entity';
 import { type GetBaseProps } from '@core/helpers/get-base-props';
 
+import { type User } from '@modules/user/domain/entities/user-entity';
+
 export type TransactionProps = {
 	userId: string;
+	user?: User;
 	payableId?: string;
 	value: string;
 	paymentMethod: string;
@@ -14,6 +17,7 @@ export type TransactionProps = {
 
 export class Transaction extends BaseEntity {
 	public readonly userId: string;
+	public user?: User;
 	public readonly payableId?: string;
 	public readonly value: string;
 	public readonly paymentMethod: string;
@@ -27,6 +31,7 @@ export class Transaction extends BaseEntity {
 		super(props);
 
 		this.userId = props.userId;
+		this.user = props.user;
 		this.payableId = props.payableId;
 		this.value = props.value;
 		this.paymentMethod = props.paymentMethod;

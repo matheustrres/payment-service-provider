@@ -4,8 +4,8 @@ import { type GetBaseProps } from './helpers/get-base-props';
 
 export class BaseEntity {
 	public readonly id: string;
-	public readonly createdAt: Date | string;
-	public updatedAt?: Date | string;
+	public readonly createdAt: Date;
+	public updatedAt?: Date;
 
 	protected constructor(props: GetBaseProps<BaseEntity>) {
 		this.id = props.id || crypto.randomUUID();
