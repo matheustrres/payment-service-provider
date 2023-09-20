@@ -41,4 +41,8 @@ export class Transaction extends BaseEntity {
 		this.cardNumber = props.card.number;
 		this.cardOwnerName = props.card.ownerName;
 	}
+
+	public static isValidPaymentMethod(paymentMethod: string): boolean {
+		return ['debit_card', 'credit_card'].includes(paymentMethod);
+	}
 }

@@ -1,5 +1,6 @@
 import { Card } from '../../entities/card/card';
 import { InvalidCardError } from '../../entities/card/invalid-card.error';
+import { InvalidTransactionError } from '../../errors/invalid-transaction.error';
 
 import { type BaseService } from '@core/base-service';
 
@@ -21,8 +22,6 @@ export type CreateTransactionResponse = {
 	transaction: Transaction;
 };
 
-const validPaymentMethods: string[] = ['credit_card', 'debit_card'];
-
 export class CreateTransactionService
 	implements BaseService<CreateTransactionRequest, CreateTransactionResponse>
 {
@@ -33,13 +32,13 @@ export class CreateTransactionService
 	public async exec(
 		request: CreateTransactionRequest,
 	): Promise<CreateTransactionResponse> {
-		if (!validPaymentMethods.includes(request.paymentMethod)) {
-			throw new Error(
+		if (!Transaction.isValidPaymentMethod(request.paymentMethod)) {
+			throw new InvalidTransactionError(
 				'Invalid payment method provided! Acceptable methods: credit_card, debit_card.',
 			);
 		}
 
-		if (!Card.validateCardNumberLength(request.cardNumber, 16)) {
+		if (!Card.validateCardNumberLength(request.cardNumber)) {
 			throw new InvalidCardError('Card number must have 16 digits.');
 		}
 
