@@ -1,23 +1,23 @@
 import {
-	type TransactionToHTTP,
+	type TransactionToJSON,
 	TransactionViewModel,
 } from '@modules/transaction/infra/http/transaction.view-model';
 import { type User } from '@modules/user/domain/entities/user-entity';
 
-export type UserToHTTP = {
+export type UserToJSON = {
 	id: string;
 	name: string;
 	email: string;
-	transactions?: TransactionToHTTP[];
+	transactions?: TransactionToJSON[];
 	created_at: Date;
 	updated_at?: Date;
 };
 
 export class UserViewModel {
-	public static toHTTP(
+	public static toJSON(
 		{ id, name, email, transactions, createdAt, updatedAt }: User,
 		loadTransactions: boolean = false,
-	): UserToHTTP {
+	): UserToJSON {
 		return {
 			id,
 			name,
@@ -25,7 +25,7 @@ export class UserViewModel {
 			created_at: createdAt,
 			...(transactions?.length &&
 				loadTransactions && {
-					transactions: transactions.map(TransactionViewModel.toHTTP),
+					transactions: transactions.map(TransactionViewModel.toJSON),
 				}),
 			...(updatedAt && {
 				updated_at: updatedAt,

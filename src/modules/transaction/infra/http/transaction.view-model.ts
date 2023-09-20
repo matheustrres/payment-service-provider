@@ -1,6 +1,6 @@
 import { type Transaction } from '@modules/transaction/domain/entities/transaction-entity';
 
-export type TransactionToHTTP = {
+export type TransactionToJSON = {
 	id: string;
 	user_id: string;
 	payable_id?: string;
@@ -15,7 +15,7 @@ export type TransactionToHTTP = {
 };
 
 export class TransactionViewModel {
-	public static toHTTP(transaction: Transaction): TransactionToHTTP {
+	public static toJSON(transaction: Transaction): TransactionToJSON {
 		return {
 			id: transaction.id,
 			user_id: transaction.userId,

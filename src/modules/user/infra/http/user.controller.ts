@@ -13,6 +13,6 @@ export class UserController {
 	public async createUserRoute(@Body() body: CreateUserDto) {
 		const { user } = await this.createUserService.exec(body);
 
-		return UserViewModel.toHTTP(user);
+		return UserViewModel.toJSON(user);
 	}
 }

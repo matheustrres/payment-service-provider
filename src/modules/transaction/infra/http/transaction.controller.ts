@@ -3,7 +3,7 @@ import { Body, Controller, Post } from '@nestjs/common';
 import { CreateTransactionDto } from './dtos/create-transaction.dto';
 import {
 	TransactionViewModel,
-	type TransactionToHTTP,
+	type TransactionToJSON,
 } from './transaction.view-model';
 
 import { CreateTransactionService } from '@modules/transaction/domain/services/create-transaction';
@@ -17,9 +17,9 @@ export class TransactionController {
 	@Post()
 	public async createTransactionRoute(
 		@Body() body: CreateTransactionDto,
-	): Promise<TransactionToHTTP> {
+	): Promise<TransactionToJSON> {
 		const { transaction } = await this.createTransactionService.exec(body);
 
-		return TransactionViewModel.toHTTP(transaction);
+		return TransactionViewModel.toJSON(transaction);
 	}
 }
