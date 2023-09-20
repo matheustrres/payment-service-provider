@@ -1,6 +1,9 @@
 import { Module } from '@nestjs/common';
 
-import { FindTransactionByIdRepository } from './data/repositories';
+import {
+	FindTransactionByIdRepository,
+	SaveTransactionRepository,
+} from './data/repositories';
 import { CreateTransactionRepository } from './data/repositories/create-transaction-repository';
 import { ListUserTransactionsRepository } from './data/repositories/list-user-transactions-repository';
 import { CreateTransactionService } from './domain/services/create-transaction';
@@ -36,6 +39,10 @@ type GetUserTransactionServiceTransactionRepository =
 			useExisting: CreateTransactionRepository,
 		},
 		{
+			provide: SaveTransactionRepository,
+			useExisting: CreateTransactionRepository,
+		},
+		{
 			provide: CreateTransactionService,
 			useFactory: (transactionRepository: CreateTransactionRepository) =>
 				new CreateTransactionService(transactionRepository),
@@ -60,6 +67,10 @@ type GetUserTransactionServiceTransactionRepository =
 		},
 	],
 	controllers: [TransactionController],
-	exports: [CreateTransactionRepository, ListUserTransactionsRepository],
+	exports: [
+		CreateTransactionRepository,
+		ListUserTransactionsRepository,
+		SaveTransactionRepository,
+	],
 })
 export class TransactionModule {}

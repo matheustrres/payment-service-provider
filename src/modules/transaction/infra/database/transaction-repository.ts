@@ -5,6 +5,7 @@ import { type Repository } from 'typeorm';
 import { TransactionMapper } from './transaction-mapper';
 
 import {
+	type SaveTransactionRepository,
 	type CreateTransactionRepository,
 	type FindTransactionByIdRepository,
 	type FindTransactionOptions,
@@ -15,7 +16,8 @@ import { PgTransaction } from '@modules/transaction/domain/models/transaction-mo
 
 type TransactionRepository = CreateTransactionRepository &
 	ListUserTransactionsRepository &
-	FindTransactionByIdRepository;
+	FindTransactionByIdRepository &
+	SaveTransactionRepository;
 
 @Injectable()
 export class PgTransactionRepository implements TransactionRepository {
@@ -57,5 +59,9 @@ export class PgTransactionRepository implements TransactionRepository {
 		return pgUserTransactions.length
 			? pgUserTransactions.map((uT) => TransactionMapper.toDomain(uT))
 			: null;
+	}
+
+	public async saveTransaction(transaction: Transaction): Promise<void> {
+		await this.repository.save(transaction);
 	}
 }
