@@ -1,4 +1,5 @@
 import { Card } from '../../entities/card/card';
+import { InvalidCardError } from '../../entities/card/invalid-card.error';
 
 import { type BaseService } from '@core/base-service';
 
@@ -36,6 +37,10 @@ export class CreateTransactionService
 			throw new Error(
 				'Invalid payment method provided! Acceptable methods: credit_card, debit_card.',
 			);
+		}
+
+		if (!Card.validateCardNumberLength(request.cardNumber, 16)) {
+			throw new InvalidCardError('Card number must have 16 digits.');
 		}
 
 		const transaction = new Transaction({

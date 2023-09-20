@@ -18,17 +18,15 @@ export class TransactionMapper {
 	): Transaction {
 		const { user, ...moreRest } = rest;
 
-		const card = new Card({
-			CVV: cardCVV,
-			expirationDate: cardExpirationDate,
-			number: cardNumber,
-			ownerName: cardOwnerName,
-		});
-
-		card.validateCardNumberLength(cardNumber.length);
+		Card.validateCardNumberLength(cardNumber, cardNumber.length);
 
 		const transaction = new Transaction({
-			card,
+			card: new Card({
+				CVV: cardCVV,
+				expirationDate: cardExpirationDate,
+				number: cardNumber,
+				ownerName: cardOwnerName,
+			}),
 			...moreRest,
 		});
 

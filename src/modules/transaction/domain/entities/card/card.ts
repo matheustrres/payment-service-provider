@@ -8,53 +8,21 @@ export type CardProps = {
 };
 
 export class Card {
-	private _CVV: string;
-	private _expirationDate: Date;
-	private _ownerName: string;
-	private _number: string;
+	public CVV: string;
+	public expirationDate: Date;
+	public ownerName: string;
+	public number: string;
 
 	public constructor(props: CardProps) {
+		props.number = this.formatCardNumber(props.number);
+
 		if (props.CVV.length !== 3)
 			throw new InvalidCardError('Card CVV must have 3 digits.');
 
 		this.CVV = props.CVV;
 		this.expirationDate = props.expirationDate;
 		this.ownerName = props.ownerName;
-		this.number = this.getCardNumberLastDigits(
-			this.formatCardNumber(props.number),
-		);
-	}
-
-	public get CVV(): string {
-		return this._CVV;
-	}
-
-	public set CVV(value: string) {
-		this._CVV = value;
-	}
-
-	public get expirationDate(): Date {
-		return this._expirationDate;
-	}
-
-	public set expirationDate(value: Date) {
-		this._expirationDate = value;
-	}
-
-	public get ownerName(): string {
-		return this._ownerName;
-	}
-
-	public set ownerName(value: string) {
-		this._ownerName = value;
-	}
-
-	public get number(): string {
-		return this._number;
-	}
-
-	public set number(value: string) {
-		this._number = value;
+		this.number = this.getCardNumberLastDigits(props.number);
 	}
 
 	private formatCardNumber(cardNumber: string): string {
@@ -65,7 +33,10 @@ export class Card {
 		return cardNumber.slice(-4);
 	}
 
-	public validateCardNumberLength(length: number = 16): boolean {
-		return this.number.length === length;
+	public static validateCardNumberLength(
+		cardNumber: string,
+		length: number = 16,
+	): boolean {
+		return cardNumber.length === length;
 	}
 }
