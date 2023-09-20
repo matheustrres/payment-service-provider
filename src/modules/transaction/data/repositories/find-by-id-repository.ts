@@ -1,6 +1,6 @@
 import { type Transaction } from '@modules/transaction/domain/entities/transaction-entity';
 
-type FindTransactionOptions = {
+export type FindTransactionOptions = {
 	userId: string;
 	transactionId: string;
 };

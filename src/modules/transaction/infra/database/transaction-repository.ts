@@ -4,13 +4,18 @@ import { type Repository } from 'typeorm';
 
 import { TransactionMapper } from './transaction-mapper';
 
-import { type CreateTransactionRepository } from '@modules/transaction/data/repositories/create-transaction-repository';
-import { type ListUserTransactionsRepository } from '@modules/transaction/data/repositories/list-user-transactions-repository';
+import {
+	type CreateTransactionRepository,
+	type FindTransactionByIdRepository,
+	type FindTransactionOptions,
+	type ListUserTransactionsRepository,
+} from '@modules/transaction/data/repositories';
 import { type Transaction } from '@modules/transaction/domain/entities/transaction-entity';
 import { PgTransaction } from '@modules/transaction/domain/models/transaction-model';
 
 type TransactionRepository = CreateTransactionRepository &
-	ListUserTransactionsRepository;
+	ListUserTransactionsRepository &
+	FindTransactionByIdRepository;
 
 @Injectable()
 export class PgTransactionRepository implements TransactionRepository {
@@ -22,6 +27,22 @@ export class PgTransactionRepository implements TransactionRepository {
 
 	public async create(data: Transaction): Promise<void> {
 		await this.repository.save(data);
+	}
+
+	public async findTransactionById({
+		transactionId,
+		userId,
+	}: FindTransactionOptions): Promise<Transaction | null> {
+		const transaction = await this.repository.findOne({
+			where: {
+				id: transactionId,
+				userId,
+			},
+		});
+
+		if (!transaction) return null;
+
+		return TransactionMapper.toDomain(transaction);
 	}
 
 	public async listUserTransactions(
