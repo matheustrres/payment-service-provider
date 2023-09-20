@@ -1,5 +1,6 @@
 import { ValidationPipe, type INestApplication } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
+import { GlobalExceptionFilter } from 'infra/http/exceptions/global-exception-filter';
 import { AppModule } from 'ioC/app.module';
 import { SpelunkerModule } from 'nestjs-spelunker';
 
@@ -12,6 +13,8 @@ export default (async (): Promise<void> => {
 			forbidNonWhitelisted: true,
 		}),
 	);
+
+	app.useGlobalFilters(new GlobalExceptionFilter());
 
 	app.enableCors({
 		origin: true,

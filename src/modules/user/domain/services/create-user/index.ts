@@ -1,4 +1,5 @@
 import { User } from '../../entities/user-entity';
+import { InvalidUserError } from '../../errors/invalid-user.error';
 
 import { type BaseService } from '@core/base-service';
 
@@ -28,7 +29,9 @@ export class CreateUserService
 		const user = await this.userRepository.findUserByEmail(request.email);
 
 		if (user) {
-			throw new Error(`The email "${request.email}" is already being used.`);
+			throw new InvalidUserError(
+				`The email "${request.email}" is already being used.`,
+			);
 		}
 
 		const newUser = new User({
