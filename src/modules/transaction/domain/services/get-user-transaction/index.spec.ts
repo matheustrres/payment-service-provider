@@ -3,6 +3,7 @@ import { type MockProxy, mock } from 'jest-mock-extended';
 import { type FindTransactionByIdRepository } from '@modules/transaction/data/repositories';
 import { type FindUserByIdRepository } from '@modules/user/data/repositories';
 
+import { makeTransaction } from '@tests/factories/transaction';
 import { makeUser } from '@tests/factories/user';
 
 import { GetUserTransactionService } from '.';
@@ -18,9 +19,15 @@ describe('GetUserTransaction service', (): void => {
 
 		userRepository.findUserById
 			.mockResolvedValueOnce(null)
-			.mockResolvedValueOnce(makeUser({ id: 'random_user_id' }));
+			.mockResolvedValue(makeUser({ id: 'random_user_id' }));
 
-		transactionRepository.findTransactionById.mockResolvedValueOnce(null);
+		transactionRepository.findTransactionById
+			.mockResolvedValueOnce(null)
+			.mockResolvedValueOnce(
+				makeTransaction({
+					id: 'random_transaction_id',
+				}),
+			);
 	});
 
 	beforeEach((): void => {
@@ -29,7 +36,7 @@ describe('GetUserTransaction service', (): void => {
 
 	it('should throw when searching for a transaction being an invalid user', async (): Promise<void> => {
 		const promise = sut.exec({
-			transactionId: 'random_transaction_id',
+			transactionId: 'alt_transaction_id',
 			userId: 'fake_user_id',
 		});
 
@@ -65,5 +72,26 @@ describe('GetUserTransaction service', (): void => {
 				transactionId: 'fake_transaction_id',
 			},
 		);
+	});
+
+	it('should get a user transaction by its id', async (): Promise<void> => {
+		const { transaction } = await sut.exec({
+			transactionId: 'random_transaction_id',
+			userId: 'random_user_id',
+		});
+
+		expect(userRepository.findUserById).toHaveBeenNthCalledWith(
+			3,
+			'random_user_id',
+		);
+		expect(transactionRepository.findTransactionById).toHaveBeenNthCalledWith(
+			2,
+			{
+				userId: 'random_user_id',
+				transactionId: 'random_transaction_id',
+			},
+		);
+
+		expect(transaction.id).toBe('random_transaction_id');
 	});
 });
