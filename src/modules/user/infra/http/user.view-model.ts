@@ -25,7 +25,7 @@ export class UserViewModel {
 			created_at: createdAt,
 			...(transactions?.length &&
 				loadTransactions && {
-					transactions: transactions.map(TransactionViewModel.toJSON),
+					transactions: transactions.map((t) => TransactionViewModel.toJSON(t)),
 				}),
 			...(updatedAt && {
 				updated_at: updatedAt,

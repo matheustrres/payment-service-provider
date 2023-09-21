@@ -1,11 +1,15 @@
+import {
+	type PayableToJSON,
+	PayableViewModel,
+} from '@modules/payable/infra/http/payable.view-model';
 import { type Transaction } from '@modules/transaction/domain/entities/transaction-entity';
 
 export type TransactionToJSON = {
 	id: string;
 	user_id: string;
-	payable_id?: string;
 	value: string;
 	description?: string;
+	payable?: PayableToJSON;
 	card_cvv: string;
 	card_expiration_date: Date;
 	card_owner_name: string;
@@ -15,17 +19,21 @@ export type TransactionToJSON = {
 };
 
 export class TransactionViewModel {
-	public static toJSON(transaction: Transaction): TransactionToJSON {
+	public static toJSON(
+		transaction: Transaction,
+		loadPayable: boolean = false,
+	): TransactionToJSON {
 		return {
 			id: transaction.id,
 			user_id: transaction.userId,
-			...(transaction.payableId && {
-				payable_id: transaction.payableId,
-			}),
 			value: transaction.value,
 			...(transaction.description && {
 				description: transaction.description,
 			}),
+			...(transaction.payable &&
+				loadPayable && {
+					payable: PayableViewModel.toJSON(transaction.payable),
+				}),
 			card_cvv: transaction.cardCVV,
 			card_expiration_date: transaction.cardExpirationDate,
 			card_owner_name: transaction.cardOwnerName,

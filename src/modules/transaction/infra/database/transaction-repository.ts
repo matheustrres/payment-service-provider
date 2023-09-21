@@ -41,11 +41,16 @@ export class PgTransactionRepository implements TransactionRepository {
 				id: transactionId,
 				userId,
 			},
+			relations: {
+				payable: true,
+			},
 		});
 
 		if (!transaction) return null;
 
-		return TransactionMapper.toDomain(transaction);
+		return TransactionMapper.toDomain(transaction, {
+			payable: true,
+		});
 	}
 
 	public async listUserTransactions(
@@ -55,10 +60,15 @@ export class PgTransactionRepository implements TransactionRepository {
 			where: {
 				userId,
 			},
+			relations: {
+				payable: true,
+			},
 		});
 
 		return pgUserTransactions.length
-			? pgUserTransactions.map((uT) => TransactionMapper.toDomain(uT))
+			? pgUserTransactions.map((uT) =>
+					TransactionMapper.toDomain(uT, { payable: true }),
+			  )
 			: null;
 	}
 

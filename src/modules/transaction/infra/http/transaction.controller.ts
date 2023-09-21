@@ -49,7 +49,7 @@ export class TransactionController {
 		});
 
 		return response.send({
-			transaction: TransactionViewModel.toJSON(transaction),
+			transaction: TransactionViewModel.toJSON(transaction, true),
 		});
 	}
 
@@ -63,7 +63,9 @@ export class TransactionController {
 		});
 
 		return response.send({
-			transactions: transactions.map(TransactionViewModel.toJSON),
+			transactions: transactions.map((t) =>
+				TransactionViewModel.toJSON(t, true),
+			),
 		});
 	}
 }
