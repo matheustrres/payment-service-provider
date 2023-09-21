@@ -4,10 +4,12 @@ import {
 	Entity,
 	JoinColumn,
 	ManyToOne,
+	OneToOne,
 	PrimaryGeneratedColumn,
 	UpdateDateColumn,
 } from 'typeorm';
 
+import { PgPayable } from '@modules/payable/domain/models/payable-model';
 import { PgUser } from '@modules/user/domain/models/user-model';
 
 @Entity('transactions')
@@ -24,6 +26,13 @@ export class PgTransaction {
 
 	@Column('varchar', { nullable: true })
 	payableId?: string;
+
+	@OneToOne(() => PgPayable, (payable) => payable.transaction, {
+		cascade: true,
+		onDelete: 'CASCADE',
+	})
+	@JoinColumn({ name: 'payableId', referencedColumnName: 'id' })
+	payable?: PgPayable;
 
 	@Column('decimal')
 	value: string;

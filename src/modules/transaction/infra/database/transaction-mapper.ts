@@ -1,3 +1,4 @@
+import { PayableMapper } from '@modules/payable/infra/database/payable-mapper';
 import { Card } from '@modules/transaction/domain/entities/card/card';
 import { Transaction } from '@modules/transaction/domain/entities/transaction-entity';
 import { type PgTransaction } from '@modules/transaction/domain/models/transaction-model';
@@ -14,9 +15,10 @@ export class TransactionMapper {
 		}: PgTransaction,
 		relations?: {
 			user?: boolean;
+			payable?: boolean;
 		},
 	): Transaction {
-		const { user, ...moreRest } = rest;
+		const { user, payable, ...moreRest } = rest;
 
 		Card.validateCardNumberLength(cardNumber, cardNumber.length);
 
@@ -34,6 +36,10 @@ export class TransactionMapper {
 			transaction.user = UserMapper.toDomain(user);
 		}
 
+		if (payable && relations?.payable) {
+			transaction.payable = PayableMapper.toDomain(payable);
+		}
+
 		return transaction;
 	}
 
@@ -42,7 +48,7 @@ export class TransactionMapper {
 		relations?: {
 			user?: boolean;
 		},
-	) {
+	): PgTransaction {
 		const { user: domainUser, ...rest } = domainTransaction;
 
 		const pgTransaction = rest as PgTransaction;
