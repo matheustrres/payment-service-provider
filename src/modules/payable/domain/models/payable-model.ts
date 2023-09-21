@@ -2,6 +2,7 @@ import {
 	Column,
 	CreateDateColumn,
 	Entity,
+	JoinColumn,
 	OneToOne,
 	PrimaryGeneratedColumn,
 	UpdateDateColumn,
@@ -14,10 +15,11 @@ export class PgPayable {
 	@PrimaryGeneratedColumn('uuid')
 	id: string;
 
-	@Column('varchar')
+	@Column('varchar', { nullable: false })
 	transactionId: string;
 
 	@OneToOne(() => PgTransaction, (transaction) => transaction.payable)
+	@JoinColumn({ name: 'transactionId', referencedColumnName: 'id' })
 	transaction?: PgTransaction;
 
 	@Column('varchar', { nullable: false })
