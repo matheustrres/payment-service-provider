@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
-import { dataSource } from 'infra/database/typeorm/datasource';
 import { type Repository } from 'typeorm';
+
+import { dataSource } from '@infra/database/typeorm/datasource';
 
 import {
 	type CreatePayableRepository,

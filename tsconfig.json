@@ -17,6 +17,12 @@
       "@core/*": [
         "./core/*"
       ],
+      "@infra/*": [
+        "./infra/*"
+      ],
+      "@ioC/*": [
+        "./ioC/*"
+      ],
       "@modules/*": [
         "./modules/*"
       ],

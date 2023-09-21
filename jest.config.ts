@@ -15,6 +15,8 @@ export default {
 	moduleNameMapper: {
 		'@tests/(.+)': '<rootDir>/tests/$1',
 		'@core/(.+)': '<rootDir>/src/core/$1',
+		'@infra/(.+)': '<rootDir>/src/infra/$1',
+		'@ioC/(.+)': '<rootDir>/src/ioC/$1',
 		'@modules/(.+)': '<rootDir>/src/modules/$1',
 	},
 } as jest.Config;

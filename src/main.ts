@@ -1,8 +1,10 @@
 import { ValidationPipe, type INestApplication } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
-import { GlobalExceptionFilter } from 'infra/http/exceptions/global-exception-filter';
-import { AppModule } from 'ioC/app.module';
 import { SpelunkerModule } from 'nestjs-spelunker';
+
+import { GlobalExceptionFilter } from '@infra/http/exceptions/global-exception-filter';
+
+import { AppModule } from '@ioC/app.module';
 
 export default (async (): Promise<void> => {
 	const app: INestApplication = await NestFactory.create(AppModule);
