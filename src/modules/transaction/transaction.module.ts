@@ -1,4 +1,5 @@
 import { Module } from '@nestjs/common';
+import { EventEmitter2, EventEmitterModule } from '@nestjs/event-emitter';
 
 import {
 	FindTransactionByIdRepository,
@@ -11,7 +12,12 @@ import { GetUserTransactionService } from './domain/services/get-user-transactio
 import { ListUserTransactionsService } from './domain/services/list-user-transactions';
 import { PgTransactionRepository } from './infra/database/transaction-repository';
 import { TransactionController } from './infra/http/transaction.controller';
+import { TransactionCreatedEventListener } from './infra/listeners/transaction-created.listener';
 
+import { EventEmitter } from '@core/contracts/event-emitter';
+
+import { CreatePayableRepository } from '@modules/payable/data/repositories';
+import { PayableModule } from '@modules/payable/payable.module';
 import { FindUserByIdRepository } from '@modules/user/data/repositories';
 import { UserModule } from '@modules/user/user.module';
 
@@ -23,9 +29,27 @@ type GetUserTransactionServiceUserRespository = FindUserByIdRepository;
 type GetUserTransactionServiceTransactionRepository =
 	FindTransactionByIdRepository;
 
+type TransactionCreatedEventListenerTransactionRepository =
+	FindTransactionByIdRepository & SaveTransactionRepository;
+
 @Module({
-	imports: [UserModule],
+	imports: [
+		EventEmitterModule.forRoot({
+			delimiter: '.',
+			global: true,
+			ignoreErrors: false,
+			maxListeners: 10,
+			newListener: false,
+			wildcard: false,
+		}),
+		UserModule,
+		PayableModule,
+	],
 	providers: [
+		{
+			provide: EventEmitter,
+			useExisting: EventEmitter2,
+		},
 		{
 			provide: CreateTransactionRepository,
 			useClass: PgTransactionRepository,
@@ -44,9 +68,11 @@ type GetUserTransactionServiceTransactionRepository =
 		},
 		{
 			provide: CreateTransactionService,
-			useFactory: (transactionRepository: CreateTransactionRepository) =>
-				new CreateTransactionService(transactionRepository),
-			inject: [CreateTransactionRepository],
+			useFactory: (
+				transactionRepository: CreateTransactionRepository,
+				eventEmitter: EventEmitter,
+			) => new CreateTransactionService(transactionRepository, eventEmitter),
+			inject: [CreateTransactionRepository, EventEmitter],
 		},
 		{
 			provide: GetUserTransactionService,
@@ -65,12 +91,29 @@ type GetUserTransactionServiceTransactionRepository =
 				new ListUserTransactionsService(transactionRepository, userRepository),
 			inject: [ListUserTransactionsRepository, FindUserByIdRepository],
 		},
+		{
+			provide: TransactionCreatedEventListener,
+			useFactory: (
+				payableRepository: CreatePayableRepository,
+				transactionRepository: TransactionCreatedEventListenerTransactionRepository,
+			) =>
+				new TransactionCreatedEventListener(
+					payableRepository,
+					transactionRepository,
+				),
+			inject: [
+				CreatePayableRepository,
+				FindTransactionByIdRepository,
+				SaveTransactionRepository,
+			],
+		},
 	],
 	controllers: [TransactionController],
 	exports: [
 		CreateTransactionRepository,
 		ListUserTransactionsRepository,
 		SaveTransactionRepository,
+		EventEmitter,
 	],
 })
 export class TransactionModule {}
