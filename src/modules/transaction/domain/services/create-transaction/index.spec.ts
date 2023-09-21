@@ -1,19 +1,23 @@
 import { type MockProxy, mock } from 'jest-mock-extended';
 
+import { type EventEmitter } from '@core/contracts/event-emitter';
+
 import { type CreateTransactionRepository } from '@modules/transaction/data/repositories/create-transaction-repository';
 
 import { CreateTransactionService } from '.';
 
 describe('CreateTransaction service', (): void => {
+	let eventEmitter: MockProxy<EventEmitter>;
 	let transactionRepository: MockProxy<CreateTransactionRepository>;
 	let sut: CreateTransactionService;
 
 	beforeAll((): void => {
+		eventEmitter = mock();
 		transactionRepository = mock();
 	});
 
 	beforeEach((): void => {
-		sut = new CreateTransactionService(transactionRepository);
+		sut = new CreateTransactionService(transactionRepository, eventEmitter);
 	});
 
 	it('should throw if payment method is not valid', async (): Promise<void> => {
@@ -42,6 +46,12 @@ describe('CreateTransaction service', (): void => {
 			paymentMethod: 'credit_card',
 			value: '285.99',
 		});
+
+		expect(transactionRepository.create).toHaveBeenNthCalledWith(
+			1,
+			transaction,
+		);
+		expect(eventEmitter.emit).toHaveBeenCalledTimes(1);
 
 		expect(transaction.id).toBeDefined();
 		expect(transaction.cardCVV).toBeDefined();
