@@ -6,6 +6,7 @@ import {
 	ManyToOne,
 	OneToOne,
 	PrimaryGeneratedColumn,
+	Relation,
 	UpdateDateColumn,
 } from 'typeorm';
 
@@ -22,7 +23,7 @@ export class PgTransaction {
 
 	@ManyToOne(() => PgUser, (user) => user.transactions)
 	@JoinColumn({ name: 'userId', referencedColumnName: 'id' })
-	user: PgUser;
+	user: Relation<PgUser>;
 
 	@Column('varchar', { nullable: true })
 	payableId?: string;
@@ -32,7 +33,7 @@ export class PgTransaction {
 		onDelete: 'CASCADE',
 	})
 	@JoinColumn({ name: 'payableId', referencedColumnName: 'id' })
-	payable?: PgPayable;
+	payable?: Relation<PgPayable>;
 
 	@Column('decimal')
 	value: string;

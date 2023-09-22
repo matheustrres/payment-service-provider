@@ -4,6 +4,7 @@ import {
 	Entity,
 	OneToMany,
 	PrimaryGeneratedColumn,
+	type Relation,
 	UpdateDateColumn,
 } from 'typeorm';
 
@@ -26,7 +27,7 @@ export class PgUser {
 	password: string;
 
 	@OneToMany(() => PgTransaction, (transaction) => transaction.user)
-	transactions: PgTransaction[] | null;
+	transactions: Relation<PgTransaction[]> | null;
 
 	@CreateDateColumn()
 	createdAt: Date;

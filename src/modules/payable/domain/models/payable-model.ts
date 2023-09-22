@@ -5,6 +5,7 @@ import {
 	JoinColumn,
 	OneToOne,
 	PrimaryGeneratedColumn,
+	Relation,
 	UpdateDateColumn,
 } from 'typeorm';
 
@@ -20,7 +21,7 @@ export class PgPayable {
 
 	@OneToOne(() => PgTransaction, (transaction) => transaction.payable)
 	@JoinColumn({ name: 'transactionId', referencedColumnName: 'id' })
-	transaction?: PgTransaction;
+	transaction?: Relation<PgTransaction>;
 
 	@Column('varchar', { nullable: false })
 	status: string;
