@@ -1,5 +1,5 @@
 import { Payable } from '@modules/payable/domain/entities/payable-entity';
-import { type PgPayable } from '@modules/payable/domain/models/payable-model';
+import { PgPayable } from '@modules/payable/domain/models/payable-model';
 import { TransactionMapper } from '@modules/transaction/infra/database/transaction-mapper';
 
 export class PayableMapper {
@@ -30,7 +30,7 @@ export class PayableMapper {
 	): PgPayable {
 		const { transaction: domainTransaction, ...rest } = domainPayable;
 
-		const pgPayable = rest as PgPayable;
+		const pgPayable = Object.assign(new PgPayable(), rest);
 
 		if (domainTransaction && relations?.transaction) {
 			pgPayable.transaction =
