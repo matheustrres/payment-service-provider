@@ -3,6 +3,7 @@ import { type MockProxy, mock } from 'jest-mock-extended';
 import { type ListUserPayablesRepository } from '@modules/payable/data/repositories';
 import { type FindUserByIdRepository } from '@modules/user/data/repositories';
 
+import { makePayable } from '@tests/factories/payable';
 import { makeUser } from '@tests/factories/user';
 
 import { ListUserPayablesService } from '.';
@@ -16,14 +17,20 @@ describe('ListUserPayables service', (): void => {
 		payableRepository = mock();
 		userRepository = mock();
 
-		userRepository.findUserById.mockResolvedValueOnce(null);
-		userRepository.findUserById.mockResolvedValue(
+		userRepository.findUserById.mockResolvedValueOnce(null).mockResolvedValue(
 			makeUser({
 				id: 'random_user_id',
 			}),
 		);
 
-		payableRepository.listUserPayables.mockResolvedValueOnce(null);
+		payableRepository.listUserPayables
+			.mockResolvedValueOnce(null)
+			.mockResolvedValueOnce([
+				makePayable(),
+				makePayable(),
+				makePayable(),
+				makePayable(),
+			]);
 	});
 
 	beforeEach((): void => {
@@ -56,5 +63,16 @@ describe('ListUserPayables service', (): void => {
 			'random_user_id',
 		);
 		expect(payableRepository.listUserPayables).toHaveBeenCalledTimes(1);
+	});
+
+	it('should return all user payables', async (): Promise<void> => {
+		const { payables } = await sut.exec({ userId: 'random_user_id' });
+
+		expect(payables.length).toBe(4);
+		expect(userRepository.findUserById).toHaveBeenNthCalledWith(
+			3,
+			'random_user_id',
+		);
+		expect(payableRepository.listUserPayables).toHaveBeenCalledTimes(2);
 	});
 });
