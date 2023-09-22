@@ -6,6 +6,7 @@ import {
 
 export type PayableToJSON = {
 	id: string;
+	transactionId: string;
 	status: string;
 	fee: string;
 	paymentDate: Date;
@@ -21,6 +22,7 @@ export class PayableViewModel {
 	): PayableToJSON {
 		return {
 			id: payable.id,
+			transactionId: payable.transactionId,
 			status: payable.status,
 			fee: payable.fee,
 			...(payable.transaction &&
