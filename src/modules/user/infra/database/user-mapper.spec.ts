@@ -1,7 +1,9 @@
 import { UserMapper } from './user-mapper';
 
 import { User } from '@modules/user/domain/entities/user-entity';
-import { type PgUser } from '@modules/user/domain/models/user-model';
+import { PgUser } from '@modules/user/domain/models/user-model';
+
+import { makeUser } from '@tests/factories/user';
 
 describe('User mapper', (): void => {
 	describe('.toDomain', (): void => {
@@ -21,6 +23,19 @@ describe('User mapper', (): void => {
 			expect(domainUser).toBeInstanceOf(User);
 			expect(domainUser.id).toEqual(pgUser.id);
 			expect(domainUser.createdAt).toEqual(pgUser.createdAt);
+		});
+	});
+
+	describe('.toPersistence', (): void => {
+		it('should convert User to PgUser', (): void => {
+			const domainUser = makeUser();
+
+			const pgUser = UserMapper.toPersistence(domainUser);
+
+			expect(pgUser).toBeDefined();
+			expect(pgUser).toBeInstanceOf(PgUser);
+			expect(pgUser.id).toEqual(domainUser.id);
+			expect(pgUser.createdAt).toEqual(domainUser.createdAt);
 		});
 	});
 });

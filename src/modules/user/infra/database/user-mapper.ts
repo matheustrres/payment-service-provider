@@ -1,6 +1,6 @@
 import { TransactionMapper } from '@modules/transaction/infra/database/transaction-mapper';
 import { User } from '@modules/user/domain/entities/user-entity';
-import { type PgUser } from '@modules/user/domain/models/user-model';
+import { PgUser } from '@modules/user/domain/models/user-model';
 
 export class UserMapper {
 	public static toDomain(pgUser: PgUser): User {
@@ -18,7 +18,7 @@ export class UserMapper {
 	): PgUser {
 		const { transactions: domainTransactions, ...rest } = domainUser;
 
-		const user = rest as PgUser;
+		const user = Object.assign(new PgUser(), rest);
 
 		if (domainTransactions?.length && relations?.transactions) {
 			user.transactions = domainTransactions.map((domainTransaction) =>

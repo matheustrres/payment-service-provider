@@ -1,8 +1,9 @@
 import { TransactionMapper } from './transaction-mapper';
 
 import { Transaction } from '@modules/transaction/domain/entities/transaction-entity';
-import { type PgTransaction } from '@modules/transaction/domain/models/transaction-model';
+import { PgTransaction } from '@modules/transaction/domain/models/transaction-model';
 
+import { makeTransaction } from '@tests/factories/transaction';
 import { makeUser } from '@tests/factories/user';
 
 describe('Transaction mapper', (): void => {
@@ -37,6 +38,19 @@ describe('Transaction mapper', (): void => {
 			expect(domainTransaction).toBeInstanceOf(Transaction);
 			expect(domainTransaction.id).toEqual(pgTransaction.id);
 			expect(domainTransaction.createdAt).toEqual(pgTransaction.createdAt);
+		});
+	});
+
+	describe('.toPersistence', (): void => {
+		it('should convert Transaction to PgTransaction', (): void => {
+			const domainTransaction = makeTransaction();
+
+			const pgTransaction = TransactionMapper.toPersistence(domainTransaction);
+
+			expect(pgTransaction).toBeDefined();
+			expect(pgTransaction).toBeInstanceOf(PgTransaction);
+			expect(pgTransaction.id).toEqual(domainTransaction.id);
+			expect(pgTransaction.createdAt).toEqual(domainTransaction.createdAt);
 		});
 	});
 });

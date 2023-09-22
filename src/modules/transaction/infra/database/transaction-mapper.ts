@@ -1,7 +1,7 @@
 import { PayableMapper } from '@modules/payable/infra/database/payable-mapper';
 import { Card } from '@modules/transaction/domain/entities/card/card';
 import { Transaction } from '@modules/transaction/domain/entities/transaction-entity';
-import { type PgTransaction } from '@modules/transaction/domain/models/transaction-model';
+import { PgTransaction } from '@modules/transaction/domain/models/transaction-model';
 import { UserMapper } from '@modules/user/infra/database/user-mapper';
 
 export class TransactionMapper {
@@ -51,7 +51,7 @@ export class TransactionMapper {
 	): PgTransaction {
 		const { user: domainUser, ...rest } = domainTransaction;
 
-		const pgTransaction = rest as PgTransaction;
+		const pgTransaction = Object.assign(new PgTransaction(), rest);
 
 		if (domainUser && relations?.user) {
 			pgTransaction.user = UserMapper.toPersistence(domainUser);
