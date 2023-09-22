@@ -1,9 +1,10 @@
 import { PayableMapper } from './payable-mapper';
 
 import { Payable } from '@modules/payable/domain/entities/payable-entity';
-import { type PgPayable } from '@modules/payable/domain/models/payable-model';
+import { PgPayable } from '@modules/payable/domain/models/payable-model';
 import { calculateFee } from '@modules/transaction/domain/helpers/calc-fee';
 
+import { makePayable } from '@tests/factories/payable';
 import { makeTransaction } from '@tests/factories/transaction';
 
 describe('Payable mapper', (): void => {
@@ -26,6 +27,19 @@ describe('Payable mapper', (): void => {
 			expect(domainPayable).toBeInstanceOf(Payable);
 			expect(domainPayable.id).toEqual(pgPayable.id);
 			expect(domainPayable.createdAt).toEqual(pgPayable.createdAt);
+		});
+	});
+
+	describe('.toPersistence', (): void => {
+		it('should convert Payable to PgPayable', (): void => {
+			const domainPayable = makePayable();
+
+			const pgPayable = PayableMapper.toPersistence(domainPayable);
+
+			expect(pgPayable).toBeDefined();
+			expect(pgPayable).toBeInstanceOf(PgPayable);
+			expect(pgPayable.id).toEqual(domainPayable.id);
+			expect(pgPayable.createdAt).toEqual(domainPayable.createdAt);
 		});
 	});
 });
