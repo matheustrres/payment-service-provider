@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { type Repository } from 'typeorm';
 
 import { PayableMapper } from './payable-mapper';
+import { PgPayable } from './payable-model';
 
 import { dataSource } from '@infra/database/typeorm/datasource';
 
@@ -12,7 +13,6 @@ import {
 	type SavePayableRepository,
 } from '@modules/payable/data/repositories';
 import { type Payable } from '@modules/payable/domain/entities/payable-entity';
-import { PgPayable } from '@modules/payable/domain/models/payable-model';
 
 type PayableRepository = CreatePayableRepository &
 	ListUserPayablesRepository &

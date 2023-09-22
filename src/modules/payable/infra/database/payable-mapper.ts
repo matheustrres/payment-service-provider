@@ -1,5 +1,6 @@
+import { PgPayable } from './payable-model';
+
 import { Payable } from '@modules/payable/domain/entities/payable-entity';
-import { PgPayable } from '@modules/payable/domain/models/payable-model';
 import { TransactionMapper } from '@modules/transaction/infra/database/transaction-mapper';
 
 export class PayableMapper {

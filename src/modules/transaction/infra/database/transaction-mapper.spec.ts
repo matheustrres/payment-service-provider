@@ -1,7 +1,7 @@
 import { TransactionMapper } from './transaction-mapper';
+import { PgTransaction } from './transaction-model';
 
 import { Transaction } from '@modules/transaction/domain/entities/transaction-entity';
-import { PgTransaction } from '@modules/transaction/domain/models/transaction-model';
 
 import { makeTransaction } from '@tests/factories/transaction';
 import { makeUser } from '@tests/factories/user';

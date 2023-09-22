@@ -9,7 +9,7 @@ import {
 	type FindUserByIdRepository,
 } from '@modules/user/data/repositories';
 import { type User } from '@modules/user/domain/entities/user-entity';
-import { PgUser } from '@modules/user/domain/models/user-model';
+import { PgUser } from '@modules/user/infra/database/user-model';
 
 type UserRepository = CreateUserRepository &
 	FindUserByEmailRepository &

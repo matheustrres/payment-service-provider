@@ -8,7 +8,7 @@ import {
 	UpdateDateColumn,
 } from 'typeorm';
 
-import { PgTransaction } from '@modules/transaction/domain/models/transaction-model';
+import { PgTransaction } from '@modules/transaction/infra/database/transaction-model';
 
 @Entity('users')
 export class PgUser {

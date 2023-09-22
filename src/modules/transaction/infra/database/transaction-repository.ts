@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { type Repository } from 'typeorm';
 
 import { TransactionMapper } from './transaction-mapper';
+import { PgTransaction } from './transaction-model';
 
 import { dataSource } from '@infra/database/typeorm/datasource';
 
@@ -13,7 +14,6 @@ import {
 	type ListUserTransactionsRepository,
 } from '@modules/transaction/data/repositories';
 import { type Transaction } from '@modules/transaction/domain/entities/transaction-entity';
-import { PgTransaction } from '@modules/transaction/domain/models/transaction-model';
 
 type TransactionRepository = CreateTransactionRepository &
 	ListUserTransactionsRepository &

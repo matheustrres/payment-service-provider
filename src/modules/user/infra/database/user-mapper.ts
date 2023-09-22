@@ -1,6 +1,6 @@
 import { TransactionMapper } from '@modules/transaction/infra/database/transaction-mapper';
 import { User } from '@modules/user/domain/entities/user-entity';
-import { PgUser } from '@modules/user/domain/models/user-model';
+import { PgUser } from '@modules/user/infra/database/user-model';
 
 export class UserMapper {
 	public static toDomain(pgUser: PgUser): User {

@@ -1,7 +1,7 @@
 import { PayableMapper } from './payable-mapper';
+import { PgPayable } from './payable-model';
 
 import { Payable } from '@modules/payable/domain/entities/payable-entity';
-import { PgPayable } from '@modules/payable/domain/models/payable-model';
 import { calculateFee } from '@modules/transaction/domain/helpers/calc-fee';
 
 import { makePayable } from '@tests/factories/payable';

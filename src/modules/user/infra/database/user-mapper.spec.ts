@@ -1,7 +1,7 @@
 import { UserMapper } from './user-mapper';
 
 import { User } from '@modules/user/domain/entities/user-entity';
-import { PgUser } from '@modules/user/domain/models/user-model';
+import { PgUser } from '@modules/user/infra/database/user-model';
 
 import { makeUser } from '@tests/factories/user';
 

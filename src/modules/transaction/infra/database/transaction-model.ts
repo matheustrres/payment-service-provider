@@ -10,8 +10,8 @@ import {
 	UpdateDateColumn,
 } from 'typeorm';
 
-import { PgPayable } from '@modules/payable/domain/models/payable-model';
-import { PgUser } from '@modules/user/domain/models/user-model';
+import { PgPayable } from '@modules/payable/infra/database/payable-model';
+import { PgUser } from '@modules/user/infra/database/user-model';
 
 @Entity('transactions')
 export class PgTransaction {

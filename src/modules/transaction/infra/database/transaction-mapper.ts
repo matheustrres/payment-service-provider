@@ -1,7 +1,8 @@
+import { PgTransaction } from './transaction-model';
+
 import { PayableMapper } from '@modules/payable/infra/database/payable-mapper';
 import { Card } from '@modules/transaction/domain/entities/card/card';
 import { Transaction } from '@modules/transaction/domain/entities/transaction-entity';
-import { PgTransaction } from '@modules/transaction/domain/models/transaction-model';
 import { UserMapper } from '@modules/user/infra/database/user-mapper';
 
 export class TransactionMapper {
