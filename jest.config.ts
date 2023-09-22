@@ -5,11 +5,31 @@ export default {
 	moduleFileExtensions: ['js', 'json', 'ts'],
 	testRegex: '.*\\.spec\\.ts$',
 	transform: {
-		'^.+\\.(t|j)s$': '@swc/jest',
+		'^.+\\.(t|j)s$': [
+			'@swc/jest',
+			{
+				jsc: {
+					keepClassNames: true,
+					transform: {
+						legacyDecorator: true,
+						decoratorMetadata: true,
+					},
+					parser: {
+						syntax: 'typescript',
+						tsx: false,
+						decorators: true,
+					},
+				},
+			},
+		],
 	},
 	passWithNoTests: true,
 	cache: false,
-	collectCoverageFrom: ['**/*.(t|j)s'],
+	collectCoverageFrom: [
+		'**/*.(t|j)s',
+		'!<rootDir>/src/*.ts',
+		'!<rootDir>/src/infra/database/**/**/**/*.ts',
+	],
 	coverageDirectory: './tests/coverage',
 	testEnvironment: 'node',
 	moduleNameMapper: {
