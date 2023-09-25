@@ -1,34 +1,19 @@
-import {
-	ValidationPipe,
-	type INestApplication,
-	HttpException,
-} from '@nestjs/common';
+import { type INestApplication } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
-import { type ValidationError } from 'class-validator';
 import { SpelunkerModule } from 'nestjs-spelunker';
 
 import { GlobalExceptionFilter } from '@infra/http/exceptions/global-exception-filter';
-import { DtoValidator } from '@infra/http/validators/dto-validator';
+import { ZodValidationExceptionFilter } from '@infra/http/exceptions/zod-exception-filter';
 
 import { AppModule } from '@ioC/app.module';
 
 export default (async (): Promise<void> => {
 	const app: INestApplication = await NestFactory.create(AppModule);
 
-	app.useGlobalPipes(
-		new ValidationPipe({
-			whitelist: true,
-			forbidNonWhitelisted: true,
-			transform: true,
-			exceptionFactory: (errors: ValidationError[]): HttpException =>
-				new HttpException(
-					DtoValidator.extractConstraints(errors).join(','),
-					400,
-				),
-		}),
+	app.useGlobalFilters(
+		new GlobalExceptionFilter(),
+		new ZodValidationExceptionFilter(),
 	);
-
-	app.useGlobalFilters(new GlobalExceptionFilter());
 
 	app.enableCors({
 		origin: true,
