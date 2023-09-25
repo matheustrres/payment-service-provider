@@ -11,7 +11,7 @@ type ErrorContent<Content extends BaseErrorContent> = {
 	endpoint: string;
 };
 
-export const buildErrorContent = (
+export const buildErrorMessage = (
 	response: Response,
 	{ code, ...rest }: ErrorContent<any>,
 ) => {

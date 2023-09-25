@@ -9,7 +9,7 @@ import { type ZodIssue, type ZodError } from 'zod';
 
 import { BaseExceptionFilter } from './base-exception-filter';
 
-import { buildErrorContent } from '.';
+import { buildErrorMessage } from '.';
 
 @Catch(ZodValidationException)
 export class ZodValidationExceptionFilter implements ExceptionFilter {
@@ -18,18 +18,18 @@ export class ZodValidationExceptionFilter implements ExceptionFilter {
 
 		const { response, commonProps } = BaseExceptionFilter.init(http);
 
-		const error: ZodError = exception.getZodError();
+		const zodError: ZodError = exception.getZodError();
 
-		const issues: Issue[] = error.errors.map(
+		const issuesFromZodErrors: Issue[] = zodError.errors.map(
 			(issue: ZodIssue): Issue => ({
 				path: issue.path[0] as string,
 				message: issue.message,
 			}),
 		);
 
-		return buildErrorContent(response, {
+		return buildErrorMessage(response, {
 			code: 400,
-			content: issues,
+			content: issuesFromZodErrors,
 			...commonProps,
 		});
 	}

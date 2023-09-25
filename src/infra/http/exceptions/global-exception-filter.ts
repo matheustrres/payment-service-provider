@@ -10,7 +10,7 @@ import { BaseExceptionFilter } from './base-exception-filter';
 
 import { ServerError } from '@core/errors/server-error';
 
-import { buildErrorContent } from '.';
+import { buildErrorMessage } from '.';
 
 @Catch()
 export class GlobalExceptionFilter implements ExceptionFilter {
@@ -22,7 +22,7 @@ export class GlobalExceptionFilter implements ExceptionFilter {
 		if (exception instanceof ServerError) {
 			const { message: content, statusCode: code } = exception;
 
-			return buildErrorContent(response, {
+			return buildErrorMessage(response, {
 				content,
 				code,
 				...commonProps,
@@ -32,14 +32,14 @@ export class GlobalExceptionFilter implements ExceptionFilter {
 		if (exception instanceof HttpException) {
 			const code: number = exception.getStatus();
 
-			return buildErrorContent(response, {
+			return buildErrorMessage(response, {
 				content: exception.message,
 				code,
 				...commonProps,
 			});
 		}
 
-		return buildErrorContent(response, {
+		return buildErrorMessage(response, {
 			content: 'Internal Server Error',
 			code: 500,
 			...commonProps,
