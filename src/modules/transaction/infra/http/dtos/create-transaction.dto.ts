@@ -1,53 +1,33 @@
-import {
-	IsDateString,
-	IsDecimal,
-	IsEnum,
-	IsNotEmpty,
-	IsOptional,
-	IsString,
-	MaxLength,
-	MinLength,
-} from 'class-validator';
+import { createZodDto } from 'nestjs-zod';
+import { z } from 'nestjs-zod/z';
 
 enum PaymentMethod {
 	DEBIT_CARD = 'debit_card',
 	CREDIT_CARD = 'credit_card',
 }
 
-export class CreateTransactionDto {
-	@IsDecimal()
-	@IsNotEmpty()
-	value: string;
+const decimalSchema = z
+	.string()
+	.nonempty()
+	.transform((arg: string): string => {
+		const float: number = parseFloat(arg);
 
-	@IsString()
-	@IsOptional()
-	description?: string;
+		if (isNaN(float)) throw new TypeError('Invalid decimal value');
 
-	@IsEnum(PaymentMethod)
-	@IsNotEmpty()
-	paymentMethod: PaymentMethod;
+		return float.toString();
+	});
 
-	@IsString()
-	@MinLength(16)
-	@MaxLength(16)
-	@IsNotEmpty()
-	cardNumber: string;
+const CreateTransactionSchema = z.object({
+	value: decimalSchema,
+	description: z.string().optional(),
+	paymentMethod: z.nativeEnum(PaymentMethod),
+	cardNumber: z.string().min(16).max(16).nonempty(),
+	cardOwnerName: z.string().nonempty(),
+	cardExpirationDate: z.dateString(),
+	cardCVV: z.string().min(3).max(3).nonempty(),
+	userId: z.string().uuid().nonempty(),
+});
 
-	@IsString()
-	@IsNotEmpty()
-	cardOwnerName: string;
-
-	@IsDateString()
-	@IsNotEmpty()
-	cardExpirationDate: Date;
-
-	@IsString()
-	@MinLength(3)
-	@MaxLength(3)
-	@IsNotEmpty()
-	cardCVV: string;
-
-	@IsString()
-	@IsNotEmpty()
-	userId: string;
-}
+export class CreateTransactionDto extends createZodDto(
+	CreateTransactionSchema,
+) {}

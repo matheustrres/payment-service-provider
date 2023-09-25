@@ -1,7 +1,7 @@
 import { Controller, Get, Query, Res } from '@nestjs/common';
 import { Response } from 'express';
 
-import { ListUserPayablesDto } from './dtos/list-user-payables.dto';
+import { ListUserPayablesDto } from './dtos';
 import { type PayableToJSON, PayableViewModel } from './payable.view-model';
 
 import { ListUserPayablesService } from '@modules/payable/domain/services/list-user-payables';
@@ -17,10 +17,7 @@ export class PayableController {
 		@Query() query: ListUserPayablesDto,
 		@Res() response: Response,
 	): Promise<Response<PayableToJSON>> {
-		const { payables } = await this.listUserPayablesService.exec({
-			status: query.status,
-			userId: query.user_id,
-		});
+		const { payables } = await this.listUserPayablesService.exec(query);
 
 		return response.send({
 			payables: payables.map((payable) => PayableViewModel.toJSON(payable)),

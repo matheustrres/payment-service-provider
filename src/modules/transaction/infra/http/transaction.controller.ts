@@ -1,16 +1,11 @@
-import {
-	Body,
-	Controller,
-	Get,
-	Param,
-	ParseUUIDPipe,
-	Post,
-	Query,
-	Res,
-} from '@nestjs/common';
+import { Body, Controller, Get, Param, Post, Res } from '@nestjs/common';
 import { Response } from 'express';
 
-import { CreateTransactionDto } from './dtos/create-transaction.dto';
+import {
+	CreateTransactionDto,
+	GetUserTransactionDto,
+	ListUserTransactionsDto,
+} from './dtos';
 import { TransactionViewModel } from './transaction.view-model';
 
 import { CreateTransactionService } from '@modules/transaction/domain/services/create-transaction';
@@ -30,37 +25,35 @@ export class TransactionController {
 		@Body() body: CreateTransactionDto,
 		@Res() response: Response,
 	): Promise<Response> {
-		const { transaction } = await this.createTransactionService.exec(body);
+		const { transaction } = await this.createTransactionService.exec({
+			...body,
+			cardExpirationDate: new Date(body.cardExpirationDate),
+		});
 
 		return response.send({
 			transaction: TransactionViewModel.toJSON(transaction),
 		});
 	}
 
-	@Get(':user_id/:transaction_id')
+	@Get(':userId/:transactionId')
 	public async getUserTransactionRoute(
-		@Param('user_id', new ParseUUIDPipe()) userId: string,
-		@Param('transaction_id', new ParseUUIDPipe()) transactionId: string,
+		@Param() params: GetUserTransactionDto,
 		@Res() response: Response,
 	): Promise<Response> {
-		const { transaction } = await this.getUserTransactionService.exec({
-			transactionId,
-			userId,
-		});
+		const { transaction } = await this.getUserTransactionService.exec(params);
 
 		return response.send({
 			transaction: TransactionViewModel.toJSON(transaction, true),
 		});
 	}
 
-	@Get()
+	@Get(':userId')
 	public async listUserTransactionsRoute(
-		@Query('user_id', new ParseUUIDPipe()) userId: string,
+		@Param() params: ListUserTransactionsDto,
 		@Res() response: Response,
 	): Promise<Response> {
-		const { transactions } = await this.listUserTransactionsService.exec({
-			userId,
-		});
+		const { transactions } =
+			await this.listUserTransactionsService.exec(params);
 
 		return response.send({
 			transactions: transactions.map((t) =>

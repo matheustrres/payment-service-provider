@@ -1,16 +1,14 @@
-import { IsEnum, IsNotEmpty, IsOptional, IsUUID } from 'class-validator';
+import { createZodDto } from 'nestjs-zod';
+import { z } from 'nestjs-zod/z';
 
 export enum PayableStatus {
 	AVAILABLE = 'paid',
 	WAITING_FUNDS = 'waiting_funds',
 }
 
-export class ListUserPayablesDto {
-	@IsUUID()
-	@IsNotEmpty()
-	user_id: string;
+const ListUserPayablesSchema = z.object({
+	userId: z.string().uuid().nonempty(),
+	status: z.nativeEnum(PayableStatus).optional(),
+});
 
-	@IsEnum(PayableStatus)
-	@IsOptional()
-	status: PayableStatus;
-}
+export class ListUserPayablesDto extends createZodDto(ListUserPayablesSchema) {}
