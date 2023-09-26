@@ -1,5 +1,7 @@
 import { type MockProxy, mock } from 'jest-mock-extended';
 
+import { type HashString } from '@core/contracts/hashing';
+
 import {
 	type CreateUserRepository,
 	type FindUserByEmailRepository,
@@ -13,10 +15,12 @@ describe('CreateUser service', (): void => {
 	let userRepository: MockProxy<
 		CreateUserRepository & FindUserByEmailRepository
 	>;
+	let hashService: MockProxy<HashString>;
 	let sut: CreateUserService;
 
 	beforeAll((): void => {
 		userRepository = mock();
+		hashService = mock();
 
 		userRepository.findUserByEmail
 			.mockResolvedValueOnce(
@@ -28,7 +32,7 @@ describe('CreateUser service', (): void => {
 	});
 
 	beforeEach((): void => {
-		sut = new CreateUserService(userRepository);
+		sut = new CreateUserService(userRepository, hashService);
 	});
 
 	it('should throw when trying to create a user with an already taken email', async (): Promise<void> => {
