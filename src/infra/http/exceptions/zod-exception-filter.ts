@@ -20,18 +20,20 @@ export class ZodValidationExceptionFilter implements ExceptionFilter {
 
 		const zodError: ZodError = exception.getZodError();
 
-		const issuesFromZodErrors: Issue[] = zodError.errors.map(
+		return buildErrorMessage(response, {
+			code: 400,
+			content: this.mapZodIssues(zodError),
+			...commonProps,
+		});
+	}
+
+	private mapZodIssues(zodError: ZodError) {
+		return zodError.errors.map(
 			(issue: ZodIssue): Issue => ({
 				path: issue.path[0] as string,
 				message: issue.message,
 			}),
 		);
-
-		return buildErrorMessage(response, {
-			code: 400,
-			content: issuesFromZodErrors,
-			...commonProps,
-		});
 	}
 }
 
