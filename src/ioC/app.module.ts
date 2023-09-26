@@ -5,10 +5,9 @@ import { ZodValidationPipe } from 'nestjs-zod';
 import { DatabaseModule } from '@infra/database/database.module';
 
 import { TransactionModule } from '@modules/transaction/transaction.module';
-import { UserModule } from '@modules/user/user.module';
 
 @Module({
-	imports: [DatabaseModule, TransactionModule, UserModule],
+	imports: [DatabaseModule, TransactionModule],
 	providers: [
 		{
 			provide: APP_PIPE,
