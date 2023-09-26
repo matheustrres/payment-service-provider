@@ -19,14 +19,17 @@ describe('LoginUser service', (): void => {
 
 		userRepository.findUserByEmail
 			.mockResolvedValueOnce(null)
-			.mockResolvedValueOnce(
+			.mockResolvedValue(
 				makeUser({
+					id: 'random_user_id',
 					email: 'john.doe@gmail.com',
 					password: 'this_is_a_hashed_password_string',
 				}),
 			);
 
-		hashService.compareStrings.mockResolvedValueOnce(false);
+		hashService.compareStrings
+			.mockResolvedValueOnce(false)
+			.mockResolvedValueOnce(true);
 	});
 
 	beforeEach((): void => {
@@ -64,5 +67,24 @@ describe('LoginUser service', (): void => {
 			plainText: 'random_password',
 			hash: 'this_is_a_hashed_password_string',
 		});
+	});
+
+	it('should return the user', async (): Promise<void> => {
+		const { user } = await sut.exec({
+			email: 'john.doe@gmail.com',
+			password: 'this_is_a_hashed_password_string',
+		});
+
+		expect(userRepository.findUserByEmail).toHaveBeenNthCalledWith(
+			3,
+			'john.doe@gmail.com',
+		);
+		expect(hashService.compareStrings).toHaveBeenNthCalledWith(2, {
+			plainText: 'this_is_a_hashed_password_string',
+			hash: 'this_is_a_hashed_password_string',
+		});
+
+		expect(user.id).toBe('random_user_id');
+		expect(user.email).toBe('john.doe@gmail.com');
 	});
 });
