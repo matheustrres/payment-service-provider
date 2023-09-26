@@ -56,7 +56,7 @@ export class PgTransactionRepository implements TransactionRepository {
 	public async listUserTransactions(
 		userId: string,
 	): Promise<Transaction[] | null> {
-		const pgUserTransactions = await this.repository.find({
+		const pgUserTransactions: PgTransaction[] = await this.repository.find({
 			where: {
 				userId,
 			},
@@ -65,11 +65,9 @@ export class PgTransactionRepository implements TransactionRepository {
 			},
 		});
 
-		return pgUserTransactions.length
-			? pgUserTransactions.map((uT) =>
-					TransactionMapper.toDomain(uT, { payable: true }),
-			  )
-			: null;
+		return pgUserTransactions.map((transaction) =>
+			TransactionMapper.toDomain(transaction, { payable: true }),
+		);
 	}
 
 	public async saveTransaction(transaction: Transaction): Promise<void> {

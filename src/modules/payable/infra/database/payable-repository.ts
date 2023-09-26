@@ -34,7 +34,7 @@ export class PgPayableRepository implements PayableRepository {
 		status,
 		userId,
 	}: ListUserPayablesOptions): Promise<Payable[] | null> {
-		const pgPayables = await this.repository.find({
+		const pgPayables: PgPayable[] = await this.repository.find({
 			where: {
 				transaction: {
 					userId,
@@ -43,9 +43,7 @@ export class PgPayableRepository implements PayableRepository {
 			},
 		});
 
-		return pgPayables.length
-			? pgPayables.map((payable) => PayableMapper.toDomain(payable))
-			: null;
+		return pgPayables.map((payable) => PayableMapper.toDomain(payable));
 	}
 
 	public async savePayable(payable: Payable): Promise<void> {

@@ -1,7 +1,6 @@
 import { type Payable } from '../../entities/payable-entity';
 
 import { type BaseService } from '@core/base-service';
-import { ServerError } from '@core/errors/server-error';
 
 import { type ListUserPayablesRepository } from '@modules/payable/data/repositories';
 import { type FindUserByIdRepository } from '@modules/user/data/repositories';
@@ -39,12 +38,8 @@ export class ListUserPayablesService
 			userId: user.id,
 		});
 
-		if (!payables?.length) {
-			throw new ServerError(`No payables were found.`);
-		}
-
 		return {
-			payables,
+			payables: payables ?? [],
 		};
 	}
 }

@@ -23,14 +23,12 @@ describe('ListUserPayables service', (): void => {
 			}),
 		);
 
-		payableRepository.listUserPayables
-			.mockResolvedValueOnce(null)
-			.mockResolvedValueOnce([
-				makePayable(),
-				makePayable(),
-				makePayable(),
-				makePayable(),
-			]);
+		payableRepository.listUserPayables.mockResolvedValueOnce([
+			makePayable(),
+			makePayable(),
+			makePayable(),
+			makePayable(),
+		]);
 	});
 
 	beforeEach((): void => {
@@ -51,28 +49,14 @@ describe('ListUserPayables service', (): void => {
 		expect(payableRepository.listUserPayables).not.toHaveBeenCalled();
 	});
 
-	it('should throw if user has no payables', async (): Promise<void> => {
-		await expect(
-			sut.exec({
-				userId: 'random_user_id',
-			}),
-		).rejects.toThrowError('No payables were found.');
-
-		expect(userRepository.findUserById).toHaveBeenNthCalledWith(
-			2,
-			'random_user_id',
-		);
-		expect(payableRepository.listUserPayables).toHaveBeenCalledTimes(1);
-	});
-
 	it('should return all user payables', async (): Promise<void> => {
 		const { payables } = await sut.exec({ userId: 'random_user_id' });
 
 		expect(payables.length).toBe(4);
 		expect(userRepository.findUserById).toHaveBeenNthCalledWith(
-			3,
+			2,
 			'random_user_id',
 		);
-		expect(payableRepository.listUserPayables).toHaveBeenCalledTimes(2);
+		expect(payableRepository.listUserPayables).toHaveBeenCalledTimes(1);
 	});
 });
