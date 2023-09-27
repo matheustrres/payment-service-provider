@@ -8,7 +8,9 @@ import { ZodValidationExceptionFilter } from '@infra/http/exceptions/zod-excepti
 import { AppModule } from '@ioC/app.module';
 
 export default (async (): Promise<void> => {
-	const app: INestApplication = await NestFactory.create(AppModule);
+	const app: INestApplication = await NestFactory.create(AppModule, {
+		bufferLogs: true,
+	});
 
 	app.useGlobalFilters(
 		new GlobalExceptionFilter(),
