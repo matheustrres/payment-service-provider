@@ -14,6 +14,9 @@
     "experimentalDecorators": true,
     "emitDecoratorMetadata": true,
     "paths": {
+      "@types/*": [
+        "./@types/*"
+      ],
       "@core/*": [
         "./core/*"
       ],

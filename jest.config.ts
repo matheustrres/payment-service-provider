@@ -34,6 +34,7 @@ export default {
 	testEnvironment: 'node',
 	moduleNameMapper: {
 		'@tests/(.+)': '<rootDir>/tests/$1',
+		'@types/(.+)': '<rootDir>/src/types/$1',
 		'@core/(.+)': '<rootDir>/src/core/$1',
 		'@infra/(.+)': '<rootDir>/src/infra/$1',
 		'@ioC/(.+)': '<rootDir>/src/ioC/$1',
