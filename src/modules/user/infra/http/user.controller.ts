@@ -5,6 +5,8 @@ import { CreateUserDto } from './dtos';
 import { LoginUserDto } from './dtos/login-user.dto';
 import { type UserToJSON, UserViewModel } from './user.view-model';
 
+import { type ApiHttpResponse } from '@types';
+
 import { CreateUserService } from '@modules/user/domain/services/create-user';
 import { LoginUserService } from '@modules/user/domain/services/login-user';
 
@@ -40,6 +42,4 @@ export class UserController {
 	}
 }
 
-type UserResponse = Response<{
-	user: UserToJSON;
-}>;
+type UserResponse = ApiHttpResponse<UserToJSON>;

@@ -6,7 +6,12 @@ import {
 	GetUserTransactionDto,
 	ListUserTransactionsDto,
 } from './dtos';
-import { TransactionViewModel } from './transaction.view-model';
+import {
+	type TransactionToJSON,
+	TransactionViewModel,
+} from './transaction.view-model';
+
+import { type ApiHttpResponse } from '@types';
 
 import { CreateTransactionService } from '@modules/transaction/domain/services/create-transaction';
 import { GetUserTransactionService } from '@modules/transaction/domain/services/get-user-transaction';
@@ -24,7 +29,7 @@ export class TransactionController {
 	public async createTransactionRoute(
 		@Body() body: CreateTransactionDto,
 		@Res() response: Response,
-	): Promise<Response> {
+	): Promise<TransactionResponse> {
 		const { transaction } = await this.createTransactionService.exec({
 			...body,
 			cardExpirationDate: new Date(body.cardExpirationDate),
@@ -39,7 +44,7 @@ export class TransactionController {
 	public async getUserTransactionRoute(
 		@Param() params: GetUserTransactionDto,
 		@Res() response: Response,
-	): Promise<Response> {
+	): Promise<TransactionResponse> {
 		const { transaction } = await this.getUserTransactionService.exec(params);
 
 		return response.send({
@@ -51,14 +56,19 @@ export class TransactionController {
 	public async listUserTransactionsRoute(
 		@Param() params: ListUserTransactionsDto,
 		@Res() response: Response,
-	): Promise<Response> {
+	): Promise<TransactionsResponse> {
 		const { transactions } =
 			await this.listUserTransactionsService.exec(params);
 
+		const mappedTransactions: TransactionToJSON[] = transactions.map((t) =>
+			TransactionViewModel.toJSON(t, true),
+		);
+
 		return response.send({
-			transactions: transactions.map((t) =>
-				TransactionViewModel.toJSON(t, true),
-			),
+			transactions: mappedTransactions,
 		});
 	}
 }
+
+type TransactionResponse = ApiHttpResponse<TransactionToJSON>;
+type TransactionsResponse = ApiHttpResponse<TransactionToJSON[]>;
