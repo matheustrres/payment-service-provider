@@ -1,4 +1,8 @@
 import {
+	type PayableToJSON,
+	PayableViewModel,
+} from '@modules/payable/infra/http/payable.view-model';
+import {
 	type TransactionToJSON,
 	TransactionViewModel,
 } from '@modules/transaction/infra/http/transaction.view-model';
@@ -9,14 +13,16 @@ export type UserToJSON = {
 	name: string;
 	email: string;
 	transactions?: TransactionToJSON[];
+	payables?: PayableToJSON[];
 	created_at: Date;
 	updated_at?: Date;
 };
 
 export class UserViewModel {
 	public static toJSON(
-		{ id, name, email, transactions, createdAt, updatedAt }: User,
+		{ id, name, email, transactions, payables, createdAt, updatedAt }: User,
 		loadTransactions: boolean = false,
+		loadPayables: boolean = false,
 	): UserToJSON {
 		return {
 			id,
@@ -26,6 +32,10 @@ export class UserViewModel {
 			...(transactions?.length &&
 				loadTransactions && {
 					transactions: transactions.map((t) => TransactionViewModel.toJSON(t)),
+				}),
+			...(payables?.length &&
+				loadPayables && {
+					payables: payables.map((p) => PayableViewModel.toJSON(p)),
 				}),
 			...(updatedAt && {
 				updated_at: updatedAt,

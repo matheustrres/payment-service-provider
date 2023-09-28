@@ -41,6 +41,6 @@ export class UserController {
 	@Get('me')
 	@UseGuards(JwtAuthGuard)
 	public getMeRoute(@LoggedInUser() user: User): UserToJSON {
-		return UserViewModel.toJSON(user, true);
+		return UserViewModel.toJSON(user, true, true);
 	}
 }

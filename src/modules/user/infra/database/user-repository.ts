@@ -31,6 +31,10 @@ export class PgUserRepository implements UserRepository {
 			where: {
 				email,
 			},
+			relations: {
+				transactions: true,
+				payables: true,
+			},
 		});
 
 		return pgUser ? UserMapper.toDomain(pgUser) : null;
@@ -40,6 +44,10 @@ export class PgUserRepository implements UserRepository {
 		const pgUser = await this.repository.findOne({
 			where: {
 				id: userId,
+			},
+			relations: {
+				transactions: true,
+				payables: true,
 			},
 		});
 
