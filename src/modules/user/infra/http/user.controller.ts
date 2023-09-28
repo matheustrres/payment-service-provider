@@ -1,4 +1,4 @@
-import { Body, Controller, Post, Res } from '@nestjs/common';
+import { Body, Controller, Post, Res, UseInterceptors } from '@nestjs/common';
 import { Response } from 'express';
 
 import { CreateUserDto } from './dtos';
@@ -6,6 +6,8 @@ import { LoginUserDto } from './dtos/login-user.dto';
 import { type UserToJSON, UserViewModel } from './user.view-model';
 
 import { type ApiHttpResponse } from '@types';
+
+import { JwtTokenInterceptor } from '@infra/http/authentication/interceptors/jwt-token.interceptor';
 
 import { CreateUserService } from '@modules/user/domain/services/create-user';
 import { LoginUserService } from '@modules/user/domain/services/login-user';
@@ -30,15 +32,11 @@ export class UserController {
 	}
 
 	@Post('login')
-	public async loginUserRoute(
-		@Body() body: LoginUserDto,
-		@Res() response: Response,
-	): Promise<UserResponse> {
+	@UseInterceptors(JwtTokenInterceptor)
+	public async loginUserRoute(@Body() body: LoginUserDto): Promise<UserToJSON> {
 		const { user } = await this.loginUserService.exec(body);
 
-		return response.send({
-			user: UserViewModel.toJSON(user),
-		});
+		return UserViewModel.toJSON(user);
 	}
 }
 
