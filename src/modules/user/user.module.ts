@@ -54,6 +54,7 @@ type CreateUserServiceRepository = CreateUserRepository &
 		CreateUserRepository,
 		FindUserByEmailRepository,
 		FindUserByIdRepository,
+		LoginUserService,
 	],
 })
 export class UserModule {}

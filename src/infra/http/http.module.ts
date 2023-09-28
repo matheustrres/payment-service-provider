@@ -2,6 +2,8 @@ import { Module } from '@nestjs/common';
 import { JwtModule } from '@nestjs/jwt';
 import { PassportModule } from '@nestjs/passport';
 
+import { LocalStrategy } from './authentication/strategies/local.strategy';
+
 import { UserModule } from '@modules/user/user.module';
 
 const TWENTY_FOUR_HOURS_IN_MS: number = 24 * 60 * 60 * 1000;
@@ -25,5 +27,6 @@ const TWENTY_FOUR_HOURS_IN_MS: number = 24 * 60 * 60 * 1000;
 			},
 		}),
 	],
+	providers: [LocalStrategy],
 })
 export class HttpModule {}
