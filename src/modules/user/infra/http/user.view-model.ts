@@ -28,7 +28,6 @@ export class UserViewModel {
 			id,
 			name,
 			email,
-			created_at: createdAt,
 			...(transactions?.length &&
 				loadTransactions && {
 					transactions: transactions.map((t) => TransactionViewModel.toJSON(t)),
@@ -37,6 +36,7 @@ export class UserViewModel {
 				loadPayables && {
 					payables: payables.map((p) => PayableViewModel.toJSON(p)),
 				}),
+			created_at: createdAt,
 			...(updatedAt && {
 				updated_at: updatedAt,
 			}),
