@@ -2,15 +2,17 @@ import { PgPayable } from './payable-model';
 
 import { Payable } from '@modules/payable/domain/entities/payable-entity';
 import { TransactionMapper } from '@modules/transaction/infra/database/transaction-mapper';
+import { UserMapper } from '@modules/user/infra/database/user-mapper';
 
 export class PayableMapper {
 	public static toDomain(
 		pgPayable: PgPayable,
 		relations?: {
 			transaction?: boolean;
+			user?: boolean;
 		},
 	): Payable {
-		const { transaction, ...rest } = pgPayable;
+		const { transaction, user, ...rest } = pgPayable;
 
 		Payable.isValidStatus(pgPayable.status);
 
@@ -20,6 +22,10 @@ export class PayableMapper {
 			payable.transaction = TransactionMapper.toDomain(transaction);
 		}
 
+		if (user && relations?.user) {
+			payable.user = UserMapper.toDomain(user);
+		}
+
 		return payable;
 	}
 
@@ -27,15 +33,19 @@ export class PayableMapper {
 		domainPayable: Payable,
 		relations?: {
 			transaction?: boolean;
+			user?: boolean;
 		},
 	): PgPayable {
-		const { transaction: domainTransaction, ...rest } = domainPayable;
+		const { transaction, user, ...rest } = domainPayable;
 
 		const pgPayable = Object.assign(new PgPayable(), rest);
 
-		if (domainTransaction && relations?.transaction) {
-			pgPayable.transaction =
-				TransactionMapper.toPersistence(domainTransaction);
+		if (transaction && relations?.transaction) {
+			pgPayable.transaction = TransactionMapper.toPersistence(transaction);
+		}
+
+		if (user && relations?.user) {
+			pgPayable.user = UserMapper.toPersistence(user);
 		}
 
 		return pgPayable;

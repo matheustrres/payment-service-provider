@@ -14,6 +14,7 @@ describe('User mapper', (): void => {
 				email: 'john@doe.com',
 				password: 'youshallnotpass',
 				transactions: [],
+				payables: [],
 				createdAt: new Date(),
 			};
 

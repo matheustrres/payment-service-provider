@@ -14,6 +14,7 @@ describe('Payable mapper', (): void => {
 
 			const pgPayable: PgPayable = {
 				id: 'random_pg_payable_id',
+				userId: 'random_pg_user_id',
 				fee: calculateFee(transaction).toString(),
 				transactionId: transaction.id,
 				status: 'waiting_funds',

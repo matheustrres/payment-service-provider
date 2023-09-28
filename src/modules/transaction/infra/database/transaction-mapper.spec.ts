@@ -27,6 +27,7 @@ describe('Transaction mapper', (): void => {
 					password: user.password,
 					createdAt: user.createdAt,
 					transactions: [],
+					payables: [],
 					updatedAt: user.updatedAt,
 				},
 				createdAt: new Date(),
