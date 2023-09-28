@@ -25,7 +25,6 @@ const CreateTransactionSchema = z.object({
 	cardOwnerName: z.string().nonempty(),
 	cardExpirationDate: z.dateString(),
 	cardCVV: z.string().min(3).max(3).nonempty(),
-	userId: z.string().uuid().nonempty(),
 });
 
 export class CreateTransactionDto extends createZodDto(

@@ -7,7 +7,6 @@ export enum PayableStatus {
 }
 
 const ListUserPayablesSchema = z.object({
-	userId: z.string().uuid().nonempty(),
 	status: z.nativeEnum(PayableStatus).optional(),
 });
 
