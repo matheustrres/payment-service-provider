@@ -25,7 +25,6 @@ export class JwtAuthGuard
 
 	public async canActivate(context: ExecutionContext) {
 		const request = this.getRequest(context) as Request;
-		console.log({ request, headers: request.headers });
 
 		const token = this.extractAuthTokenFromHeaders(request.headers);
 
@@ -34,20 +33,15 @@ export class JwtAuthGuard
 				this.getJwtErrorMessage('JsonWebTokenNotFoundError'),
 			);
 
-		console.log({ token });
-
 		let payload: JwtPayload;
 
 		try {
 			payload = this.jwtService.verify<JwtPayload>(token);
 		} catch (error) {
-			console.log({ error });
 			const { name } = error as Error;
 
 			throw new UnauthorizedException(name as JwtError);
 		}
-
-		console.log({ payload });
 
 		const user = await this.userRepository.findUserByEmail(payload.sub);
 
