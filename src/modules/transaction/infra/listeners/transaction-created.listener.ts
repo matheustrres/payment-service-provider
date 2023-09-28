@@ -39,7 +39,7 @@ export class TransactionCreatedEventListener {
 			throw new InvalidTransactionError('Transaction not found.');
 		}
 
-		const payable = this.createPayable(
+		const payable = this.createPayableForTransaction(
 			transaction,
 			calculateFee(transaction).toString(),
 		);
@@ -50,20 +50,26 @@ export class TransactionCreatedEventListener {
 		await this.transactionRepository.saveTransaction(transaction);
 	}
 
-	private async findTransaction(transactionId: string, userId: string) {
+	private async findTransaction(
+		transactionId: string,
+		userId: string,
+	): Promise<Transaction | null> {
 		return this.transactionRepository.findTransactionById({
 			transactionId,
 			userId,
 		});
 	}
 
-	private createPayable(
-		{ id, paymentMethod, createdAt }: Transaction,
+	private createPayableForTransaction(
+		transaction: Transaction,
 		fee: string,
 	): Payable {
+		const { paymentMethod, id: transactionId, createdAt, userId } = transaction;
+
 		const payableProps = {
 			fee,
-			transactionId: id,
+			transaction,
+			transactionId,
 		};
 
 		if (paymentMethod === 'credit_card') {
@@ -75,11 +81,13 @@ export class TransactionCreatedEventListener {
 				...payableProps,
 				status: 'waiting_funds',
 				paymentDate: createdAtPlus30Days,
+				userId,
 			});
 		} else if (paymentMethod === 'debit_card') {
 			return new Payable({
 				...payableProps,
 				status: 'paid',
+				userId,
 				paymentDate: createdAt,
 			});
 		}

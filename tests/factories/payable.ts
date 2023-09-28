@@ -16,6 +16,7 @@ export const makePayable = (
 	return new Payable({
 		id: override.id ?? 'random_payable_id',
 		transactionId: transaction.id,
+		userId: override.userId ?? 'random_user_id',
 		fee: calculateFee(transaction).toString(),
 		paymentDate: new Date(),
 		status: 'paid',

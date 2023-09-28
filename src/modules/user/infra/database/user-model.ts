@@ -8,6 +8,7 @@ import {
 	UpdateDateColumn,
 } from 'typeorm';
 
+import { PgPayable } from '@modules/payable/infra/database/payable-model';
 import { PgTransaction } from '@modules/transaction/infra/database/transaction-model';
 
 @Entity('users')
@@ -28,6 +29,9 @@ export class PgUser {
 
 	@OneToMany(() => PgTransaction, (transaction) => transaction.user)
 	transactions: Relation<PgTransaction[]> | null;
+
+	@OneToMany(() => PgPayable, (payable) => payable.user)
+	payables: Relation<PgPayable[]> | null;
 
 	@CreateDateColumn()
 	createdAt: Date;

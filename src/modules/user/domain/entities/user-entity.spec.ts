@@ -8,6 +8,7 @@ describe('User entity', (): void => {
 			email: 'john.doe@gmail.com',
 			password: 'youshallnotpass',
 			transactions: [],
+			payables: [],
 		});
 
 		expect(user.id).toBe('random_id');

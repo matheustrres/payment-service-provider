@@ -46,6 +46,7 @@ export class CreateUserService
 			...request,
 			password,
 			transactions: [],
+			payables: [],
 		});
 
 		await this.userRepository.create(newUser);

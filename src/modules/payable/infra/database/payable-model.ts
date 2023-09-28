@@ -3,6 +3,7 @@ import {
 	CreateDateColumn,
 	Entity,
 	JoinColumn,
+	ManyToOne,
 	OneToOne,
 	PrimaryGeneratedColumn,
 	Relation,
@@ -10,6 +11,7 @@ import {
 } from 'typeorm';
 
 import { PgTransaction } from '@modules/transaction/infra/database/transaction-model';
+import { PgUser } from '@modules/user/infra/database/user-model';
 
 @Entity('payables')
 export class PgPayable {
@@ -22,6 +24,13 @@ export class PgPayable {
 	@OneToOne(() => PgTransaction, (transaction) => transaction.payable)
 	@JoinColumn({ name: 'transactionId', referencedColumnName: 'id' })
 	transaction?: Relation<PgTransaction>;
+
+	@Column('varchar', { nullable: false })
+	userId: string;
+
+	@ManyToOne(() => PgUser, (user) => user.payables)
+	@JoinColumn({ name: 'userId', referencedColumnName: 'id' })
+	user?: Relation<PgUser>;
 
 	@Column('varchar', { nullable: false })
 	status: string;

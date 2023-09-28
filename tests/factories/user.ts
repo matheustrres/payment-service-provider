@@ -13,6 +13,7 @@ export const makeUser = (
 		name: 'Adam Smith',
 		email: 'adam.smith@gmail.com',
 		password: 'superdifficultpassword',
+		payables: [],
 		transactions: [],
 		...override,
 	});

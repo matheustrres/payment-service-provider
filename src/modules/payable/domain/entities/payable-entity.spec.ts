@@ -10,6 +10,7 @@ describe('Payable entity', (): void => {
 
 		const payable = new Payable({
 			id: 'random_payable_id',
+			userId: 'random_user_id',
 			fee: calculateFee(transaction).toString(),
 			paymentDate: new Date(2023, 9, 21),
 			status: 'paid',
@@ -17,6 +18,7 @@ describe('Payable entity', (): void => {
 		});
 
 		expect(payable.id).toBe('random_payable_id');
+		expect(payable.userId).toBe('random_user_id');
 		expect(payable.status).toBe('paid');
 		expect(payable.fee).toBe('485');
 	});
