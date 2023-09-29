@@ -2,6 +2,8 @@ import { type INestApplication } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
 import { SpelunkerModule } from 'nestjs-spelunker';
 
+import { Env } from '@core/config/env';
+
 import { GlobalExceptionFilter } from '@infra/http/exceptions/global-exception-filter';
 import { ZodValidationExceptionFilter } from '@infra/http/exceptions/zod-exception-filter';
 
@@ -27,7 +29,7 @@ export default (async (): Promise<void> => {
 
 	app.enableShutdownHooks();
 
-	app.listen(3000);
+	app.listen(Env.APP_PORT);
 
 	console.log(SpelunkerModule.explore(app));
 })();

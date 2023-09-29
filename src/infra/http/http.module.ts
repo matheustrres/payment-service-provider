@@ -4,6 +4,8 @@ import { PassportModule } from '@nestjs/passport';
 
 import { LocalStrategy } from './authentication/strategies/local.strategy';
 
+import { Env } from '@core/config/env';
+
 import { UserModule } from '@modules/user/user.module';
 
 const TWENTY_FOUR_HOURS_IN_MS: number = 24 * 60 * 60 * 1000;
@@ -16,7 +18,7 @@ const TWENTY_FOUR_HOURS_IN_MS: number = 24 * 60 * 60 * 1000;
 		}),
 		JwtModule.register({
 			global: true,
-			secret: process.env.JWT_MD5_SECRET_KEY,
+			secret: Env.JWT_MD5_SECRET_KEY,
 			signOptions: {
 				algorithm: 'HS384',
 				expiresIn: TWENTY_FOUR_HOURS_IN_MS,
