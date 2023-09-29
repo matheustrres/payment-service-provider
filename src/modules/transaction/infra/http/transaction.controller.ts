@@ -2,9 +2,9 @@ import {
 	Body,
 	Controller,
 	Get,
+	Param,
 	ParseUUIDPipe,
 	Post,
-	Query,
 	UseGuards,
 } from '@nestjs/common';
 
@@ -45,10 +45,10 @@ export class TransactionController {
 		return TransactionViewModel.toJSON(transaction);
 	}
 
-	@Get()
+	@Get(':transactionId')
 	public async getUserTransactionRoute(
+		@Param('transactionId', new ParseUUIDPipe()) transactionId: string,
 		@LoggedInUser() user: User,
-		@Query('transactionId', new ParseUUIDPipe()) transactionId: string,
 	): Promise<TransactionToJSON> {
 		const { transaction } = await this.getUserTransactionService.exec({
 			transactionId,
