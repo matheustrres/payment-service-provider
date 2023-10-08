@@ -45,7 +45,7 @@ export class UserController {
 		const { accessToken, user } = await this.loginUserService.exec(body);
 
 		return {
-			user: UserViewModel.toJSON(user),
+			user: UserViewModel.toJSON(user, false, false),
 			access_token: accessToken,
 		};
 	}
