@@ -1,6 +1,7 @@
 import { type MockProxy, mock } from 'jest-mock-extended';
 
 import { type CompareStrings } from '@core/contracts/hashing';
+import { type SignTokenService } from '@core/contracts/token/sign-token';
 
 import { type FindUserByEmailRepository } from '@modules/user/data/repositories';
 
@@ -11,11 +12,13 @@ import { LoginUserService } from '.';
 describe('LoginUser service', (): void => {
 	let userRepository: MockProxy<FindUserByEmailRepository>;
 	let hashService: MockProxy<CompareStrings>;
+	let tokenService: MockProxy<SignTokenService>;
 	let sut: LoginUserService;
 
 	beforeAll((): void => {
 		userRepository = mock();
 		hashService = mock();
+		tokenService = mock();
 
 		userRepository.findUserByEmail
 			.mockResolvedValueOnce(null)
@@ -33,7 +36,7 @@ describe('LoginUser service', (): void => {
 	});
 
 	beforeEach((): void => {
-		sut = new LoginUserService(userRepository, hashService);
+		sut = new LoginUserService(userRepository, hashService, tokenService);
 	});
 
 	it('should throw if an invalid user tries to login', async (): Promise<void> => {

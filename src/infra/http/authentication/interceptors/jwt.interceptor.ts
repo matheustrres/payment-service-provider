@@ -5,32 +5,25 @@ import {
 	type NestInterceptor,
 } from '@nestjs/common';
 import { type HttpArgumentsHost } from '@nestjs/common/interfaces';
-import { JwtService } from '@nestjs/jwt';
 import { type Response } from 'express';
 import { type Observable, map } from 'rxjs';
 
-import { type User } from '@modules/user/domain/entities/user-entity';
+import { type LoginUserResponse } from '@modules/user/domain/services/login-user';
 
 @Injectable()
-export class JwtTokenInterceptor implements NestInterceptor {
-	public constructor(private readonly jwtService: JwtService) {}
-
+export class JwtInterceptor implements NestInterceptor {
 	public intercept(
 		context: ExecutionContext,
 		next: CallHandler,
-	): Observable<User> {
+	): Observable<LoginUserResponse> {
 		return next.handle().pipe(
-			map((user: User): User => {
-				const token: string = this.jwtService.sign({
-					sub: user.email,
-				});
-
+			map((val: LoginUserResponse): LoginUserResponse => {
 				const http: HttpArgumentsHost = context.switchToHttp();
 				const response: Response = http.getResponse<Response>();
 
-				response.setHeader('Authorization', `Bearer ${token}`);
+				response.setHeader('Authorization', `Bearer ${val.accessToken}`);
 
-				return user;
+				return val;
 			}),
 		);
 	}
