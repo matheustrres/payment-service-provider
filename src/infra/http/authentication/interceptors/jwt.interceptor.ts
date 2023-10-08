@@ -8,7 +8,12 @@ import { type HttpArgumentsHost } from '@nestjs/common/interfaces';
 import { type Response } from 'express';
 import { type Observable, map } from 'rxjs';
 
-import { type LoginUserResponse } from '@modules/user/domain/services/login-user';
+import { type User } from '@modules/user/domain/entities/user-entity';
+
+type LoginUserResponse = {
+	user: User;
+	access_token: string;
+};
 
 @Injectable()
 export class JwtInterceptor implements NestInterceptor {
@@ -21,7 +26,7 @@ export class JwtInterceptor implements NestInterceptor {
 				const http: HttpArgumentsHost = context.switchToHttp();
 				const response: Response = http.getResponse<Response>();
 
-				response.setHeader('Authorization', `Bearer ${val.accessToken}`);
+				response.setHeader('Authorization', `Bearer ${val.access_token}`);
 
 				return val;
 			}),
