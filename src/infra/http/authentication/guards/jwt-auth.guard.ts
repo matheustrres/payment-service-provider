@@ -9,7 +9,9 @@ import { AuthGuard as NestPassportAuthGuard } from '@nestjs/passport';
 import { type Request } from 'express';
 import { type IncomingHttpHeaders } from 'http';
 
-import { FindUserByEmailRepository } from '@modules/user/data/repositories';
+import { type JwtPayload } from '@types';
+
+import { FindUserByIdRepository } from '@modules/user/data/repositories';
 
 @Injectable()
 export class JwtAuthGuard
@@ -18,20 +20,21 @@ export class JwtAuthGuard
 {
 	public constructor(
 		private readonly jwtService: JwtService,
-		private readonly userRepository: FindUserByEmailRepository,
+		private readonly userRepository: FindUserByIdRepository,
 	) {
 		super();
 	}
 
-	public async canActivate(context: ExecutionContext) {
+	public async canActivate(context: ExecutionContext): Promise<boolean> {
 		const request = this.getRequest(context) as Request;
 
 		const token = this.extractAuthTokenFromHeaders(request.headers);
 
-		if (!token)
+		if (!token) {
 			throw new UnauthorizedException(
 				this.getJwtErrorMessage('JsonWebTokenNotFoundError'),
 			);
+		}
 
 		let payload: JwtPayload;
 
@@ -43,7 +46,7 @@ export class JwtAuthGuard
 			throw new UnauthorizedException(name as JwtError);
 		}
 
-		const user = await this.userRepository.findUserByEmail(payload.sub);
+		const user = await this.userRepository.findUserById(payload.sub);
 
 		if (!user) {
 			throw new UnauthorizedException('Invalid credentials');
@@ -73,12 +76,6 @@ export class JwtAuthGuard
 		);
 	}
 }
-
-type JwtPayload = {
-	sub: string;
-	iat: number;
-	exp: number;
-};
 
 type JwtError =
 	| 'JsonWebTokenError'
