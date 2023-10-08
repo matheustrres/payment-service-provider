@@ -1,32 +1,18 @@
 import { Module } from '@nestjs/common';
-import { JwtModule } from '@nestjs/jwt';
 import { PassportModule } from '@nestjs/passport';
 
 import { LocalStrategy } from './authentication/strategies/local.strategy';
 
-import { Env } from '@core/config/env';
+import { TokenModule } from '@infra/token/token.module';
 
 import { UserModule } from '@modules/user/user.module';
 
-const TWENTY_FOUR_HOURS_IN_MS: number = 24 * 60 * 60 * 1000;
-
 @Module({
 	imports: [
+		TokenModule,
 		UserModule,
 		PassportModule.register({
 			defaultStrategy: 'jwt',
-		}),
-		JwtModule.register({
-			global: true,
-			secret: Env.JWT_MD5_SECRET_KEY,
-			signOptions: {
-				algorithm: 'HS384',
-				expiresIn: TWENTY_FOUR_HOURS_IN_MS,
-			},
-			verifyOptions: {
-				algorithms: ['HS384'],
-				ignoreExpiration: false,
-			},
 		}),
 	],
 	providers: [LocalStrategy],

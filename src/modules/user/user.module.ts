@@ -11,14 +11,16 @@ import { PgUserRepository } from './infra/database/user-repository';
 import { UserController } from './infra/http/user.controller';
 
 import { CompareStrings, HashString } from '@core/contracts/hashing';
+import { SignTokenService } from '@core/contracts/token/sign-token';
 
 import { HashModule } from '@infra/providers/hashing/hash.module';
+import { TokenModule } from '@infra/token/token.module';
 
 type CreateUserServiceRepository = CreateUserRepository &
 	FindUserByEmailRepository;
 
 @Module({
-	imports: [HashModule],
+	imports: [HashModule, TokenModule],
 	providers: [
 		{
 			provide: CreateUserRepository,
@@ -45,8 +47,9 @@ type CreateUserServiceRepository = CreateUserRepository &
 			useFactory: (
 				userRepository: FindUserByEmailRepository,
 				hashService: CompareStrings,
-			) => new LoginUserService(userRepository, hashService),
-			inject: [FindUserByEmailRepository, CompareStrings],
+				tokenService: SignTokenService,
+			) => new LoginUserService(userRepository, hashService, tokenService),
+			inject: [FindUserByEmailRepository, CompareStrings, SignTokenService],
 		},
 	],
 	controllers: [UserController],
